@@ -1,19 +1,3 @@
-# final-project-CS496
+# Desk Aid
 
-# Requirements
-https://docs.google.com/spreadsheets/d/1ubKmKj9qQ4Lg1KZaKjM0uvrT6I30wDjbyRsIdCAirQs/edit?usp=sharing
-
-# Iterations
-# Sprint 1
-
-# Sprint 2
-
-# Sprint 3
-
-# Sprint 4
-
-# Sprint 5
-
-# Architecture
-
-# Testing
+This the a repository for the final project of CS496, a desk aid website to be completed for a client. The code of the website can be found in desk_aid, and any documentation can be found in docs.
