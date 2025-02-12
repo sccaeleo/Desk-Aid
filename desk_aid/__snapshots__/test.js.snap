@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home page Renders 1`] = `
+<div>
+  <div
+    class="flex-col text-center"
+  >
+    <h1
+      class="text-5xl font-bold pt-20"
+    >
+      Constituent Service Desk Aid
+    </h1>
+    <form
+      style="position: absolute; top: 40vh; width: 100%;"
+    >
+      <input
+        class="text-black w-4/5 rounded-l-md"
+        placeholder="Search"
+        type="text"
+        value=""
+      />
+      <button
+        class="hover:bg-blue-500 rounded-r-md px-4"
+        type="submit"
+      >
+        Search
+      </button>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`Home page renders correctly 1`] = `
+<div>
+  <div
+    class="flex-col text-center"
+  >
+    <h1
+      class="text-5xl font-bold pt-20"
+    >
+      Constituent Service Desk Aid
+    </h1>
+    <form
+      style="position: absolute; top: 40vh; width: 100%;"
+    >
+      <input
+        class="text-black w-4/5 rounded-l-md"
+        placeholder="Search"
+        type="text"
+        value=""
+      />
+      <button
+        class="hover:bg-blue-500 rounded-r-md px-4"
+        type="submit"
+      >
+        Search
+      </button>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`renders correctly 1`] = `null`;

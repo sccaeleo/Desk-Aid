@@ -10,6 +10,7 @@ const [query, setQuery] = useState('');
   /* Search Function */
   const search = (e) => {
     // todo when database
+
   };
 
 return (
@@ -31,4 +32,5 @@ return (
   </div>
 );
 }
+
 
