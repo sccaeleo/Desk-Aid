@@ -13,7 +13,7 @@ const [query, setQuery] = useState('');
   };
 
 return (
-  <div className="flex-col text-center">``
+  <div className="flex-col text-center">
     
     {/* Title */}
     <h1 className='text-5xl font-bold pt-20'>Constituent Service Desk Aid</h1>
