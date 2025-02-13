@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link'
 import Image from "next/image";
+//import Server from "./server.js";
 
 export default function Home() {
 const [query, setQuery] = useState('');
