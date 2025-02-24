@@ -1,44 +1,19 @@
-import sqlite3 from 'sqlite3';
-import { NextApiRequest, NextApiResponse } from 'next';
+import express from 'express';
 
-const db = new sqlite3.Database(
-    "./database.db",
-    sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
-    (err) => {
-        if (err) {
-        return console.error(err.message);
-    }
-    console.log("Database connected.");
-    }
-);
+const app = express();
+const port = 4000;
 
-db.serialize(function() {
-    db.run(
-        `
-        CREATE TABLE IF NOT EXISTS categories (
-            id INTEGER PRIMARY KEY,
-            name TEXT  NOT NULL
-        );
-
-        `
-    );
-    db.run(
-        `
-        CREATE TABLE IF NOT EXISTS resources (
-            id   INTEGER PRIMARY KEY,
-            name TEXT    NOT NULL
-        );
-        `
-    );
-
+// Start server
+app.listen(port, () => {
+    console.log("Server running.")
 });
 
-export default async function handler(req, res) {
+// Check server
+app.get("/", (req, res, next) => {
+    res.json({"message":"The server is up and running!"})
+});
 
-    // Temp
-    const rows = await db.all('SELECT * FROM categories');
-
-    res.status(200).json(rows);
-}
-
-db.close()
+// 404 Error on any other request
+app.use(function(req, res){
+    res.status(404);
+});
