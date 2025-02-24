@@ -18,8 +18,8 @@ const db = new sqlite3.Database(
         db.run(
             `
             CREATE TABLE IF NOT EXISTS categories (
-                id INTEGER PRIMARY KEY,
-                name TEXT  NOT NULL
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT  NOT NULL UNIQUE
             );
     
             `
@@ -27,11 +27,14 @@ const db = new sqlite3.Database(
         db.run(
             `
             CREATE TABLE IF NOT EXISTS resources (
-                id   INTEGER PRIMARY KEY,
-                name TEXT    NOT NULL
+                id   INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE
             );
             `
+            
         );
+        var insert = 'INSERT INTO categories (name) VALUES (?)'
+        db.run(insert, ["test3"])
 
         
     }
