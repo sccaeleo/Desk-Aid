@@ -31,10 +31,7 @@ const db = new sqlite3.Database(
                 name TEXT NOT NULL UNIQUE
             );
             `
-            
         );
-        var insert = 'INSERT INTO categories (name) VALUES (?)'
-        db.run(insert, ["test3"])
 
         
     }

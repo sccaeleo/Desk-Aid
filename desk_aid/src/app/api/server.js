@@ -31,6 +31,12 @@ app.get("/api/resources", (req, res, next) => {
     });
 });
 
+// Create resource
+
+// Update resource
+
+// Delete resource
+
 // Get categories
 app.get("/api/categories", (req, res, next) => {
     var sql = "select * from categories"
@@ -46,6 +52,20 @@ app.get("/api/categories", (req, res, next) => {
         })
     });
 });
+
+// Create category
+
+// Update category
+
+// Delete category
+
+// Get guides
+
+// Create guide
+
+// Update guide
+
+// Delete guide
 
 // 404 Error on any other request
 app.use(function(req, res){
