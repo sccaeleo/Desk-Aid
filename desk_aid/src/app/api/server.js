@@ -55,9 +55,22 @@ app.get("/api/categories", (req, res, next) => {
 
 // Create category
 
+
 // Update category
 
 // Delete category
+app.delete("/api/categories/:id", (req, res, next) => {
+    db.run(
+        'DELETE FROM categories WHERE id = ?',
+        req.params.id,
+        function (err, result) {
+            if (err){
+                res.status(400).json({"error": res.message})
+                return;
+            }
+            res.json({"message":"deleted"})
+    });
+});
 
 // Get guides
 
