@@ -32,6 +32,14 @@ const db = new sqlite3.Database(
             );
             `
         );
+        db.run(
+            `
+            CREATE TABLE IF NOT EXISTS guides (
+                id   INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE
+            );
+            `
+        );
 
         
     }
