@@ -30,6 +30,8 @@ return (
       />
       <button type="submit" className='hover:bg-blue-500 rounded-r-md px-4'>Search</button>
     </form>
+
+    {/* List of Guide Categories*/}
   </div>
 );
 }
