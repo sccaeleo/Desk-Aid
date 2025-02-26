@@ -87,12 +87,43 @@ app.get("/api/guides", (req, res, next) => {
         })
     });
 });
+//Search guides
+function searchGuides(guideName){
+app.get("/api/guides", (req, res, next) => {
+    var sql = "select " + guideName + " from guides"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({"error":err.message});
+            return;
+        }
+        res.json({
+            "message":"success",
+            "data":rows
+        })
+    });
+});
+}
 // Create guide
-db.run('INSERT INTO guides(name) VALUES(?)',['Cool Guide'],function (err) {if(err) { return console.log(err.message); }console.log('Row was added to the table: ${this.lastID}');})
+function insertGuide(name){
+    db.run('INSERT INTO guides(name) VALUES(?)',[name],function (err) {if(err) { return console.log(err.message); }console.log('Row was added to the table: ${this.lastID}');})
+    }
+
 // Update guide
 
 // Delete guide
-
+app.delete("/api/guides/:id", (req, res, next) => {
+    db.run(
+        'DELETE FROM guides WHERE id = ?',
+        req.params.id,
+        function (err, result) {
+            if (err){
+                res.status(400).json({"error": res.message})
+                return;
+            }
+            res.json({"message":"deleted"})
+    });
+});
 // 404 Error on any other request
 app.use(function(req, res){
     res.status(404);
