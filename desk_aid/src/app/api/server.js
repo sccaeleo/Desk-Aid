@@ -113,7 +113,7 @@ function insertGuide(name){
 // Update guide
 
 // Delete guide
-db.run('DELETE FROM guides WHERE ID = ?',['3'], function (err) {if(err) { return console.log(err.message); }console.log('THINGS WENT HORRIBLY WRONG');})
+//db.run('DELETE FROM guides WHERE ID = ?',['3'], function (err) {if(err) { return console.log(err.message); }console.log('THINGS WENT HORRIBLY RIGHT');})
 app.delete("/api/guides/:id", (req, res, next) => {
     db.run(
         'DELETE FROM guides WHERE id = ?',
