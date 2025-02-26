@@ -104,6 +104,7 @@ app.get("/api/guides", (req, res, next) => {
     });
 });
 }
+
 // Create guide
 function insertGuide(name){
     db.run('INSERT INTO guides(name) VALUES(?)',[name],function (err) {if(err) { return console.log(err.message); }console.log('Row was added to the table: ${this.lastID}');})
@@ -112,6 +113,7 @@ function insertGuide(name){
 // Update guide
 
 // Delete guide
+db.run('DELETE FROM guides WHERE ID = ?',['3'], function (err) {if(err) { return console.log(err.message); }console.log('THINGS WENT HORRIBLY WRONG');})
 app.delete("/api/guides/:id", (req, res, next) => {
     db.run(
         'DELETE FROM guides WHERE id = ?',
