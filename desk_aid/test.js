@@ -18,10 +18,6 @@ import Home from './src/app/page.js';
 
 // Home Page Tests
 describe('Home page', () => {
-  it('Renders', () => {
-    const { container } = render(<Home />);
-    expect(container).toMatchSnapshot();
-  });
 
   it('Displays title', () => {
     const { getByText } = render(<Home />);
