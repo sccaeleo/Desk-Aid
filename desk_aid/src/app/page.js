@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios'
 import Link from 'next/link'
 import Image from "next/image";
-//import Server from "./server.js";
 
 export default function Home() {
+const [categories, setCategories] = useState([]);
 const [query, setQuery] = useState('');
 
   /* Search Function */
@@ -13,6 +14,17 @@ const [query, setQuery] = useState('');
     // todo when database
 
   };
+
+  /* Get Guide Categories */
+  useEffect(() => {
+    axios.get('http://localhost:4000/api/categories')
+    .then(response => {
+      setCategories(response.data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }, []);
 
 return (
   <div className="flex-col text-center">
@@ -32,6 +44,11 @@ return (
     </form>
 
     {/* List of Guide Categories*/}
+    <div className="absolute top-1/2 w-4/5 h-full grid grid-cols-5 gap-4" style={{ left: '50%', transform: 'translateX(-50%)' }}>
+      {categories.map((category, index) => (
+        <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={index}>{category.name}</button>
+      ))}
+    </div>
   </div>
 );
 }

@@ -1,14 +1,13 @@
 import express from 'express';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 const port = 4000;
 
 import db from "./database.js"
 
-// Start server
-app.listen(port, () => {
-    console.log("Server running.")
-});
+
 
 // Check server
 app.get("/", (req, res, next) => {
@@ -46,10 +45,7 @@ app.get("/api/categories", (req, res, next) => {
             res.status(400).json({"error":err.message});
             return;
         }
-        res.json({
-            "message":"success",
-            "data":rows
-        })
+        res.json(rows)
     });
 });
 
@@ -113,7 +109,7 @@ function insertGuide(name){
 // Update guide
 
 // Delete guide
-//db.run('DELETE FROM guides WHERE ID = ?',['3'], function (err) {if(err) { return console.log(err.message); }console.log('THINGS WENT HORRIBLY RIGHT');})
+db.run('DELETE FROM guides WHERE ID = ?',['3'], function (err) {if(err) { return console.log(err.message); }console.log('THINGS WENT HORRIBLY RIGHT');})
 app.delete("/api/guides/:id", (req, res, next) => {
     db.run(
         'DELETE FROM guides WHERE id = ?',
@@ -126,9 +122,15 @@ app.delete("/api/guides/:id", (req, res, next) => {
             res.json({"message":"deleted"})
     });
 });
+
 // 404 Error on any other request
 app.use(function(req, res){
     res.status(404);
+});
+
+// Start server
+app.listen(port, () => {
+    console.log("Server running.")
 });
 
 
