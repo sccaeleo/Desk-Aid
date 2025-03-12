@@ -1,6 +1,9 @@
 
 import Link from 'next/link'
 export default function Page() {
+
+
+
     return (
         <div className="p-2">
             <h1>Edit Page</h1>
