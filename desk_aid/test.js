@@ -9,10 +9,10 @@ import axios from 'axios';
 import '@testing-library/jest-dom';
 
 // Page Imports
-import Home from './src/app/page.js';
+import Home from './src/app/api/pages/page.js';
 //import GuideList from './src/app/GuideListPage/page.js';
 //import Guide from './src/app/GuidePage/page.js';
-import Resources from './src/app/ResourcesPage/page.js';
+import Resources from './src/app/api/pages/ResourcesPage/page.js';
 //import Help from './src/app/HelpPage/page.js';
 //import SignIn from './src/app/SignInPage/page.js';
 
