@@ -14,6 +14,25 @@ app.get("/", (req, res, next) => {
     res.json({"message":"The server is up and running!"})
 });
 
+// Sign in
+app.post("/api/signin", (req, res, next) => {
+    console.log("Received request to /api/signin");
+    const { username, password } = req.body;
+    const sql = "SELECT * FROM user WHERE username = ? AND password = ?";
+    const params = [username, password];
+    db.get(sql, params, (err, row) => {
+    if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+    }
+    if (!row) {
+        res.status(401).json({ error: "Invalid username or password" });
+        return;
+    }
+    res.json({ success: true });
+    });
+});
+
 // Get resources
 app.get("/api/resources", (req, res, next) => {
     var sql = "select * from resources"
@@ -118,11 +137,6 @@ app.delete("/api/guides/:id", (req, res, next) => {
             }
             res.json({"message":"deleted"})
     });
-});
-
-// 404 Error on any other request
-app.use(function(req, res){
-    res.status(404);
 });
 
 // Start server
