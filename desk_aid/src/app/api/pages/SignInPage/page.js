@@ -2,13 +2,11 @@
 import Link from 'next/link'
 import axios from 'axios';
 import { useState } from 'react';
-import { useRouter } from 'next/compat/router';
 
 export default function Page() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const router = useRouter();
     
     /* Sign in Function */
     const signIn = (e) => {
@@ -19,7 +17,8 @@ export default function Page() {
             // If correct username and password, send to editselect
             if (response.data.success) {
                 setIsLoggedIn(true);
-                router.push("/EditSelectPage");
+                // Go to /api/pages/EditSelectPage
+                window.location.href = "/api/pages/EditSelectPage";
             } 
             else {
                 console.error(response.data.error);
