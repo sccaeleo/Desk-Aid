@@ -32,6 +32,7 @@ export default function Page() {
 return (
     <div>
         {/* Sign In Form */}
+        <h1>Sign In to Edit Guides</h1>
         <form className="max-w-sm mx-auto" onSubmit={signIn}>
         <div className="mb-5">
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username:</label>

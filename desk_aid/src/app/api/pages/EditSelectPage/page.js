@@ -1,29 +1,27 @@
-
 import Link from 'next/link'
 export default function Page() {
 
-
-
     return (
-        <div className="p-2">
+        <div>
             <h1>Edit Page</h1>
-            <div className='w-full'>
-            <Link href="/api/pages/EditResources" className="w-1/5">
-                <button className="hover:bg-blue-500 py-4 mx-2 w-1/5 flex-1 rounded">
-                    Edit Resources
-                </button>
-            </Link>
-            <Link href="/api/pages/EditCategories" className="w-1/5">
-                <button className="hover:bg-blue-500 py-4 mx-2 w-1/5 flex-1 rounded">
-                    Edit Guide Categories
-                </button>
-            </Link>
-            <Link href="/api/pages/EditGuides" className="w-1/5">
-                <button className="hover:bg-blue-500 py-4 mx-2 w-1/5 flex-1 rounded">
-                    Edit Guides
-                </button>
-            </Link>
+            <div className='flex justify-evenly'>
+                <Link href="/api/pages/EditResources" className='flex justify-center w-1/3'>
+                    <button className="hover:bg-blue-500 py-4 w-4/5 rounded">
+                        Edit Resources
+                    </button>
+                </Link>
+                <Link href="/api/pages/EditCategories" className='flex justify-center w-1/3'>
+                    <button className="hover:bg-blue-500 py-4 w-4/5 rounded">
+                        Edit Guide Categories
+                    </button>
+                </Link>
+                <Link href="/api/pages/EditGuides" className='flex justify-center w-1/3'>
+                    <button className="hover:bg-blue-500 py-4 w-4/5 rounded">
+                        Edit Guides
+                    </button>
+                </Link>
             </div>
         </div>
     );
 }
+

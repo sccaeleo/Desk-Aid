@@ -28,3 +28,13 @@ header {
 button {
   background: var(--middleground);
 }
+
+h1 {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  top: 10%;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1%;
+}

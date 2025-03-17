@@ -67,9 +67,32 @@ app.get("/api/categories", (req, res, next) => {
 });
 
 // Create category
-
+app.post("/api/categories", (req, res, next) => {
+    const { name } = req.body;
+    const sql = "INSERT INTO categories (name) VALUES (?)";
+    const params = [name];
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ id: this.lastID });
+    });
+});
 
 // Update category
+app.put("/api/categories/:id", (req, res, next) => {
+    const { name } = req.body;
+    const sql = "UPDATE categories SET name = ? WHERE id = ?";
+    const params = [name, req.params.id];
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: "Category updated successfully" });
+    });
+});
 
 // Delete category
 app.delete("/api/categories/:id", (req, res, next) => {

@@ -6,38 +6,107 @@ import { useState, useEffect } from "react";
 
 export default function Page() {
 
-    const [categories, setCategories] = useState([]);
+const [categories, setCategories] = useState([]);
+const [modal, setModal] = useState(false);
+const [edit, setEdit] = useState(null);
 
 /* Get Guide Categories */
-    useEffect(() => {
-        axios.get('http://localhost:4000/api/categories')
-        .then(response => {
-            setCategories(response.data);
+useEffect(() => {
+    axios.get('http://localhost:4000/api/categories')
+    .then(response => {
+        setCategories(response.data);
+    })
+    .catch(error => {
+        console.error(error);
+    });
+}, []);
+
+/* Add Category */
+const addCategory = () => {
+        axios.post('http://localhost:4000/api/categories', { name: edit.name })
+        .then((response) => {
+            setCategories([...categories, response.data]);
+            setModal(false);
         })
-        .catch(error => {
-            console.error(error);
-        });
-    }, []);
+        .catch((error) => console.error(error));
+};
+
+/* Edit Category */
+const editCategory = (e) => {
+    e.preventDefault();
+    axios.put(`http://localhost:4000/api/categories/${edit.id}`, edit)
+    .then(() => {
+        setCategories(categories.map((category) => category.id === edit.id ? edit : category));
+        setModal(false);
+    })
+    .catch((error) => console.error(error));
+};
 
     return (
-        <div className="p-2">
+        <div>
             <h1>Edit Guide Categories</h1>
-            
-            <ul>
-            <div className="absolute w-4/5 h-full grid grid-cols-5 gap-4">
-            <button className="hover:bg-blue-500 w-full h-10 rounded-md">+ Add a Category</button>
+
+            {/* The Buttonsssss */}
+            <div className="absolute w-4/5 h-full grid grid-cols-5 gap-4 p-3">
+
+            {/* Add Category Button */}
+            <button className="hover:bg-blue-500 w-full h-10 rounded-md" 
+            onClick={() => {
+                setEdit({name: ''});
+                setModal(true);}}>
+            + Add a Category
+            </button>
+
+            {/* Buttons of Categories */}
             {categories.map((category, index) => (
-                <button className="hover:bg-blue-500 w-full h-10 rounded-md relative" key={index}>
+                <button className="hover:bg-blue-500 w-full h-10 rounded-md relative" key={index}
+                onClick={() => {
+                    setEdit(category); 
+                    setModal(true);}}>
                     {category.name}
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 absolute bottom-1 right-1">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                    </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 absolute bottom-1 right-1">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
                 </button>
-                
             ))}
             </div>
-                
-            </ul>
+
+            {/* Popup for Categories */}
+            {modal && (
+            <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex justify-center items-center">
+                <div className="bg-blue-950 p-4 rounded-md w-1/2 relative">
+                <button 
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-md absolute top-4 right-4"
+                    onClick={() => setModal(false)}>
+                    X
+                </button>
+                <h2 className="text-lg font-bold mb-4">{edit ? `Edit` : 'Add a Category'}</h2>
+                <form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (edit) {
+                    editCategory(e, edit.id);
+                    } else {
+                    addCategory(e);
+                    }
+                }}>
+                    <input 
+                    type="text" 
+                    value={edit.name} 
+                    onChange={(e) => setEdit({ ...edit, name: e.target.value })}
+                    placeholder="Category name"
+                    className="w-full p-2 mb-4 border text-black border-gray-300 rounded-md"
+                    />
+                    <button 
+                    type="submit" 
+                    className=" hover:bg-blue-500 font-bold py-2 px-4 rounded-md"
+                    >
+                    {edit ? 'Save Changes' : 'Add Category'}
+                    </button>
+                </form>
+                </div>
+            </div>
+            )}
         </div>
     );
 }
+
