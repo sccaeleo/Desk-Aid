@@ -82,11 +82,15 @@ app.post("/api/categories", (req, res, next) => {
 
 // Update category
 app.put("/api/categories/:id", (req, res, next) => {
+    console.log(req.body);
+    console.log(req.params);
+    const { id } = req.params;
     const { name } = req.body;
     const sql = "UPDATE categories SET name = ? WHERE id = ?";
-    const params = [name, req.params.id];
+    const params = [name, id];
     db.run(sql, params, function (err) {
         if (err) {
+            console.error(err.message);
             res.status(400).json({ error: err.message });
             return;
         }
