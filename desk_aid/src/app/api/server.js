@@ -123,6 +123,7 @@ app.get("/api/guides", (req, res, next) => {
         })
     });
 });
+
 //Search guides
 function searchGuides(guideName){
 app.get("/api/guides", (req, res, next) => {
@@ -162,6 +163,12 @@ app.delete("/api/guides/:id", (req, res, next) => {
             res.json({"message":"deleted"})
     });
 });
+
+// Get category_guides
+
+// Add category_guides link
+
+// Delete category_guides link
 
 // Start server
 app.listen(port, () => {
