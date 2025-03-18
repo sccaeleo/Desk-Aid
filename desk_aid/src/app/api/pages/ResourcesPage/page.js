@@ -8,17 +8,17 @@ const [resources, setResources] = useState([]);
 
 /* Get Resources */
 useEffect(() => {
-axios.get('http://localhost:4000/api/resources')
-.then(response => {
-    if (Array.isArray(response.data)) {
-        setResources(response.data);
-    } else {
-        console.error('Expected an array, but got:', response.data);
-    }
-})
-.catch(error => {
-    console.error(error);
-});
+    axios.get('http://localhost:4000/api/resources')
+    .then(response => {
+        if (Array.isArray(response.data)) {
+            setResources(response.data);
+        } else {
+            console.error('Expected an array, but got:', response.data);
+        }
+    })
+    .catch(error => {
+        console.error(error);
+    });
 }, []);
 
 return (

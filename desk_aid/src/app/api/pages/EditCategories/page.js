@@ -60,7 +60,7 @@ const deleteCategory = (id) => {
             <h1>Edit Guide Categories</h1>
 
             {/* The Buttonsssss */}
-            <div className="absolute w-4/5 h-full grid grid-cols-5 gap-4 p-3">
+            <div className="absolute w-full h-1 grid grid-cols-5 gap-4 p-3">
 
             {/* Add Category Button */}
             <button className="hover:bg-blue-500 w-full h-10 rounded-md" 
@@ -102,7 +102,7 @@ const deleteCategory = (id) => {
                 {/* Form w Input and Buttons */}
                 <form onSubmit={(e) => {
                     e.preventDefault();
-                    if (editedCategory) {
+                    if (!add) {
                     editCategory(e, editedCategory.id);
                     } else {
                     addCategory(e);
@@ -112,7 +112,7 @@ const deleteCategory = (id) => {
                     <input 
                     type="text" 
                     value={editedCategory.name} 
-                    onChange={(e) => setEditedCategory({ ...editedCategory, name: e.target.value })}
+                    onChange={(e) => setEditedCategory({name: e.target.value })}
                     placeholder="Category name"
                     className="w-full p-2 mb-4 border text-black border-gray-300 rounded-md"
                     />
