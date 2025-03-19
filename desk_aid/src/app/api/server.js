@@ -48,10 +48,48 @@ app.get("/api/resources", (req, res, next) => {
 });
 
 // Create resource
+app.post("/api/resources", (req, res, next) => {
+    const { name, description } = req.body;
+    const sql = "INSERT INTO resources (name, description) VALUES (?, ?)";
+    const params = [name, description];
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            console.error(err.message);
+            return;
+        }
+        res.json({ id: this.lastID });
+    });
+});
 
 // Update resource
+app.put("/api/resources/:id", (req, res, next) => {
+    const { id } = req.params;
+    const { name, description } = req.body;
+    const sql = "UPDATE resources SET name = ?, description = ? WHERE id = ?";
+    const params = [name, description, id];
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ id: this.lastID });
+    });
+});
 
 // Delete resource
+app.delete("/api/resources/:id", (req, res, next) => {
+    const { id } = req.params;
+    const sql = "DELETE FROM resources WHERE id = ?";
+    const params = [id];
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ id: this.lastID });
+    });
+});
 
 // Get categories
 app.get("/api/categories", (req, res, next) => {
@@ -74,6 +112,7 @@ app.post("/api/categories", (req, res, next) => {
     db.run(sql, params, function (err) {
         if (err) {
             res.status(400).json({ error: err.message });
+            console.error(err.message);
             return;
         }
         res.json({ id: this.lastID });
