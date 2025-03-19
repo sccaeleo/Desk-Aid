@@ -5,7 +5,7 @@ import axios from 'axios'
 export default function Page() {
 const [resources, setResources] = useState([]);
 const [modal, setModal] = useState(false);
-const [editedResource, setEditedResource] = useState(null);
+const [editedResource, setEditedResource] = useState({});
 const [add, setAdd] = useState(true);
 const [deleteModal, setDeleteModal] = useState(false);
 
@@ -110,20 +110,30 @@ return (
                     addResource(e);
                 }
             }}>
-                {/* Input Box */}
+                {/* Name Input Box */}
                 <input 
                 type="text" 
                 value={editedResource.name} 
-                onChange={(e) => setEditedResource({name: e.target.value, id: editedResource.id})}
+                onChange={(e) => setEditedResource({...editedResource, name: e.target.value, id: editedResource.id})}
                 placeholder="Resource name"
+                className="w-full p-2 mb-4 border text-black border-gray-300 rounded-md"
+                />
+
+                {/* Description Input Box */}
+                <textarea
+                type="text" 
+                value={editedResource.description} 
+                onChange={(e) => setEditedResource({...editedResource, description: e.target.value, id: editedResource.id})}
+                placeholder="Description"
                 className="w-full p-2 mb-4 border text-black border-gray-300 rounded-md"
                 />
 
                 {/* Add/Save Button */}
                 <button 
                 type="submit" 
-                className=" hover:bg-blue-500 font-bold py-2 px-4 rounded-md"
-                >
+                className={`hover:bg-blue-500 font-bold py-2 px-4 rounded-md ${!(editedResource.name && editedResource.description) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!(editedResource.name && editedResource.description)}
+                > 
                 {add ? 'Add Resource' : 'Save'}
                 </button>
 
