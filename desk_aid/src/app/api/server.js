@@ -144,14 +144,39 @@ app.get("/api/guides", (req, res, next) => {
 }
 
 // Create guide
-function insertGuide(name){
-    db.run('INSERT INTO guides(name) VALUES(?)',[name],function (err) {if(err) { return console.log(err.message); }console.log('Row was added to the table: ${this.lastID}');})
-    }
+app.post("/api/guides", (req, res, next) => {
+    const { name } = req.body;
+    const sql = "INSERT INTO guides (name) VALUES (?)";
+    const params = [name];
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ id: this.lastID });
+    });
+});
+
 
 // Update guide
+app.put("/api/guides/:id", (req, res, next) => {
+    console.log(req.body);
+    console.log(req.params);
+    const { id } = req.params;
+    const { name } = req.body;
+    const sql = "UPDATE guides SET name = ? WHERE id = ?";
+    const params = [name, id];
+    db.run(sql, params, function (err) {
+        if (err) {
+            console.error(err.message);
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: "Guide updated successfully" });
+    });
+});
 
 // Delete guide
-db.run('DELETE FROM guides WHERE ID = ?',['3'], function (err) {if(err) { return console.log(err.message); }console.log('THINGS WENT HORRIBLY RIGHT');})
 app.delete("/api/guides/:id", (req, res, next) => {
     db.run(
         'DELETE FROM guides WHERE id = ?',

@@ -11,7 +11,8 @@ const [query, setQuery] = useState('');
 
   /* Search Function */
   const search = (e) => {
-    // todo when database
+    // Todo by Tim
+    
 
   };
 
@@ -44,7 +45,7 @@ return (
     </form>
 
     {/* List of Guide Categories*/}
-    <div className="absolute top-1/2 w-4/5 h-full grid grid-cols-5 gap-4" style={{ left: '50%', transform: 'translateX(-50%)' }}>
+    <div className="absolute top-1/2 w-11/12 grid grid-cols-4 gap-4" style={{ left: '50%', transform: 'translateX(-50%)' }}>
       {categories.map((category, index) => (
         <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={index}>{category.name}</button>
       ))}
