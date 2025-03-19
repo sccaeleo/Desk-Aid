@@ -6,7 +6,7 @@ export default function Page() {
 
 const [resources, setResources] = useState([]);
 const [modal, setModal] = useState(false);
-const [selectedResource, setSelectedResource] = useState(null);
+const [selectedResource, setSelectedResource] = useState({ name: '', description: '' });
 
 /* Get Resources */
 useEffect(() => {
@@ -23,6 +23,11 @@ useEffect(() => {
     });
 }, []);
 
+const clickResource = (resource) => {
+    setSelectedResource(resource);
+    setModal(true);
+};
+
 return (
     <div>
     {/* List of Resources*/}
@@ -30,7 +35,7 @@ return (
     <div className="absolute w-11/12 h-full grid grid-cols-5 gap-4" style={{ left: '50%', transform: 'translateX(-50%)' }}>
     {resources.map((resource, index) => (
         <button className="hover:bg-blue-500 w-full h-10 rounded-md" 
-        onClick={() => setModal(true) && setSelectedResource(resource)} 
+        onClick={() => clickResource(resource)} 
         key={index}>{resource.name}
         </button>
     ))}

@@ -5,7 +5,7 @@ import axios from 'axios'
 export default function Page() {
 const [resources, setResources] = useState([]);
 const [modal, setModal] = useState(false);
-const [editedResource, setEditedResource] = useState({});
+const [editedResource, setEditedResource] = useState({ name: '', description: '' });
 const [add, setAdd] = useState(true);
 const [deleteModal, setDeleteModal] = useState(false);
 
@@ -26,7 +26,7 @@ useEffect(() => {
 
 /* Add Resource */
 const addResource = () => {
-    axios.post('http://localhost:4000/api/resources', { name: editedResource.name })
+    axios.post('http://localhost:4000/api/resources', { name: editedResource.name, description: editedResource.description })
     .then((response) => {
         setResources([...resources, editedResource]);
         setModal(false);
@@ -36,7 +36,7 @@ const addResource = () => {
 
 /* Edit Resource */
 const editResource = (id) => {
-    axios.put(`http://localhost:4000/api/resources/${id}`, {name: editedResource.name})
+    axios.put(`http://localhost:4000/api/resources/${id}`, {name: editedResource.name, description: editedResource.description})
     .then(() => {
         setResources(resources.map((resource) => (resource.id === editedResource.id ? editedResource : resource)));
         setModal(false);
@@ -114,7 +114,7 @@ return (
                 <input 
                 type="text" 
                 value={editedResource.name} 
-                onChange={(e) => setEditedResource({...editedResource, name: e.target.value, id: editedResource.id})}
+                onChange={(e) => setEditedResource({...editedResource, name: e.target.value, description: editedResource.description  || '', id: editedResource.id})}
                 placeholder="Resource name"
                 className="w-full p-2 mb-4 border text-black border-gray-300 rounded-md"
                 />
@@ -123,7 +123,7 @@ return (
                 <textarea
                 type="text" 
                 value={editedResource.description} 
-                onChange={(e) => setEditedResource({...editedResource, description: e.target.value, id: editedResource.id})}
+                onChange={(e) => setEditedResource({...editedResource, name: editedResource.name, description: e.target.value, id: editedResource.id})}
                 placeholder="Description"
                 className="w-full p-2 mb-4 border text-black border-gray-300 rounded-md"
                 />
