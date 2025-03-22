@@ -58,7 +58,7 @@ const deleteResource = (id) => {
 return (
     <div>
         {/* List of Resources*/}
-        <h1>Resources</h1>
+        <h1>Edit Resources</h1>
 
         <div className="absolute w-full h-1 grid grid-cols-5 gap-4 p-3">
 
@@ -87,7 +87,7 @@ return (
 
         {/* Popup for Resources */}
         {modal && (
-        <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex justify-center items-center">
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex justify-center items-center" role='dialog'>
             <div className="bg-blue-950 p-4 rounded-md w-1/2 relative">
 
             {/* Close Button */}
@@ -101,7 +101,7 @@ return (
             <h2 className="text-lg font-bold mb-4">{add ? `Add New Resource` : 'Edit Resource'}</h2>
             
             {/* Form w Input and Buttons */}
-            <form onSubmit={(e) => {
+            <form role="form" onSubmit={(e) => {
                 e.preventDefault();
                 if (!add) {
                     editResource(editedResource.id);

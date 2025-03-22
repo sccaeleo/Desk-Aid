@@ -86,7 +86,7 @@ return (
 
         {/* Popup for Categories */}
         {modal && (
-        <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex justify-center items-center">
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex justify-center items-center" role="dialog">
             <div className="bg-blue-950 p-4 rounded-md w-1/2 relative">
 
             {/* Close Button */}

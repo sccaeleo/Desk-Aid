@@ -10,12 +10,13 @@ import '@testing-library/jest-dom';
 
 // Page Imports
 import Home from './src/app/api/pages/page.js';
-//import GuideList from './src/app/GuideListPage/page.js';
 //import Guide from './src/app/GuidePage/page.js';
 import Resources from './src/app/api/pages/ResourcesPage/page.js';
 import Help from './src/app/api/pages/HelpPage/page.js';
 import SignIn from './src/app/api/pages/SignInPage/page.js';
 import EditSelect from './src/app/api/pages/EditSelectPage/page.js';
+import EditResources from './src/app/api/pages/EditResources/page.js';
+import EditCategories from './src/app/api/pages/EditCategories/page.js';
 
 jest.mock('axios');
 
@@ -112,5 +113,88 @@ describe('Edit Select page', () => {
     expect(getByText('Edit Resources')).toBeInTheDocument();
     expect(getByText('Edit Guide Categories')).toBeInTheDocument();
     expect(getByText('Edit Guides')).toBeInTheDocument();
+  });
+});
+
+// Edit Resources Page Tests
+describe('Edit Resources page', () => {
+  it('Renders edit resources page', () => {
+    const { getByText } = render(<EditResources />);
+    expect(getByText('Edit Resources')).toBeInTheDocument();
+  });
+
+  it('Renders add resource button', () => {
+    const { getByText } = render(<EditResources />);
+    expect(getByText('+ Add a Resource')).toBeInTheDocument();
+  });
+
+  it('Renders resources', async () => {
+    const resources = [
+      { name: 'Resource 1' },
+      { name: 'Resource 2' },
+      { name: 'Resource 3' },
+    ];
+
+    axios.get.mockResolvedValue({ data: resources });
+
+    const { getByText } = render(<EditResources />);
+    await waitFor(() => expect(getByText('Resource 1')).toBeInTheDocument());
+    await waitFor(() => expect(getByText('Resource 2')).toBeInTheDocument());
+    await waitFor(() => expect(getByText('Resource 3')).toBeInTheDocument());
+  });
+
+  it('Opens modal when add resource button is clicked', async () => {
+    const { getByText, getByRole } = render(<EditResources />);
+    const addButton = getByText('+ Add a Resource');
+    fireEvent.click(addButton);
+    expect(getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('Closes modal when close button is clicked', async () => {
+    const { getByText, getByRole } = render(<EditResources />);
+    const addButton = getByText('+ Add a Resource');
+    fireEvent.click(addButton);
+    const closeButton = getByRole('button', { name: 'X' });
+    fireEvent.click(closeButton);
+  });
+
+  it('Calls addResource function when add resource form is submitted', () => {
+    const addResourceMock = jest.fn();
+    const { getByText, getByRole } = render(<EditResources addResource={addResourceMock} />);
+    const addButton = getByText('+ Add a Resource');
+    fireEvent.click(addButton);
+    const form = getByRole('form');
+    fireEvent.submit(form);
+    waitFor(() => expect(addResourceMock).toHaveBeenCalledTimes(1));
+  });
+
+  it('Calls editResource function when edit resource form is submitted', async () => {
+    const editResourceMock = jest.fn();
+    const resources = [
+      { id: 1, name: 'Resource 1', description: 'Description' },
+    ];
+
+    axios.get.mockResolvedValue({ data: resources });
+    
+    const { getByText, getByRole } = render(<EditResources editResource={editResourceMock} />);
+    const resourceButton = await waitFor(() => getByRole('button', { name: 'Resource 1' }));
+    fireEvent.click(resourceButton);
+    const form = getByRole('form');
+    fireEvent.submit(form);
+    waitFor(() => expect(editResourceMock).toHaveBeenCalledTimes(1));
+  });
+
+  it('Calls deleteResource function when delete resource button is clicked', async () => {
+    const deleteResourceMock = jest.fn();
+    const resources = [
+      { name: 'Resource 1'},
+    ];
+
+    axios.get.mockResolvedValue({ data: resources });    
+
+    const { getByRole } = render(<EditResources />);
+    const deleteButton = getByRole('button', { name: 'Delete' });
+    fireEvent.click(deleteButton);
+    waitFor(() => expect(deleteResourceMock).toHaveBeenCalledTimes(1));
   });
 });
