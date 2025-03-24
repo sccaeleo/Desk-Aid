@@ -143,7 +143,7 @@ return (
                 {!add && (
                 <button
                 type="button" 
-                testId="trash"
+                testid="trash"
                 className=" bg-red-500 hover:bg-red-700 font-bold py-2 px-6 rounded-md absolute right-4"
                 onClick={() => setDeleteModal(true)}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
