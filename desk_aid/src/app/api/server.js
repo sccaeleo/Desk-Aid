@@ -43,7 +43,7 @@ app.get("/api/resources", (req, res, next) => {
             res.status(400).json({"error":err.message});
             return;
         }
-        res.json(rows)
+        res.status(200).json(rows)
     });
 });
 
@@ -58,7 +58,7 @@ app.post("/api/resources", (req, res, next) => {
             console.error(err.message);
             return;
         }
-        res.json({ id: this.lastID });
+        res.status(200).json({ id: this.lastID });
     });
 });
 
@@ -73,7 +73,7 @@ app.put("/api/resources/:id", (req, res, next) => {
             res.status(400).json({ error: err.message });
             return;
         }
-        res.json({ id: this.lastID });
+        res.status(200).json({ message: "Success" });
     });
 });
 
@@ -87,7 +87,7 @@ app.delete("/api/resources/:id", (req, res, next) => {
             res.status(400).json({ error: err.message });
             return;
         }
-        res.json({ id: this.lastID });
+        res.status(200).json({ id: this.lastID });
     });
 });
 
@@ -100,7 +100,7 @@ app.get("/api/categories", (req, res, next) => {
             res.status(400).json({"error":err.message});
             return;
         }
-        res.json(rows)
+        res.status(200).json(rows)
     });
 });
 
@@ -115,7 +115,7 @@ app.post("/api/categories", (req, res, next) => {
             console.error(err.message);
             return;
         }
-        res.json({ id: this.lastID });
+        res.status(200).json({ id: this.lastID });
     });
 });
 
@@ -133,7 +133,7 @@ app.put("/api/categories/:id", (req, res, next) => {
             res.status(400).json({ error: err.message });
             return;
         }
-        res.json({ message: "Category updated successfully" });
+        res.status(200).json({ message: "Success" });
     });
 });
 
@@ -147,7 +147,7 @@ app.delete("/api/categories/:id", (req, res, next) => {
                 res.status(400).json({"error": res.message})
                 return;
             }
-            res.json({"message":"deleted"})
+            res.status(200).json({ id: this.lastID })
     });
 });
 
@@ -240,6 +240,7 @@ app.listen(port, () => {
     console.log("Server running.")
 });
 
+export default app;
 
 
 

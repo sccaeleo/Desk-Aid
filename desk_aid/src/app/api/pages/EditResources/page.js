@@ -112,7 +112,8 @@ return (
             }}>
                 {/* Name Input Box */}
                 <input 
-                type="text" 
+                type="text"
+                name="name" 
                 value={editedResource.name} 
                 onChange={(e) => setEditedResource({...editedResource, name: e.target.value, description: editedResource.description  || '', id: editedResource.id})}
                 placeholder="Resource name"
@@ -122,6 +123,7 @@ return (
                 {/* Description Input Box */}
                 <textarea
                 type="text" 
+                name="description"
                 value={editedResource.description} 
                 onChange={(e) => setEditedResource({...editedResource, name: editedResource.name, description: e.target.value, id: editedResource.id})}
                 placeholder="Description"
@@ -141,6 +143,7 @@ return (
                 {!add && (
                 <button
                 type="button" 
+                testId="trash"
                 className=" bg-red-500 hover:bg-red-700 font-bold py-2 px-6 rounded-md absolute right-4"
                 onClick={() => setDeleteModal(true)}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">

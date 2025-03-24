@@ -6,6 +6,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor, getByLabelText } from '@testing-library/react';
 import axios from 'axios';
+import request from 'supertest';
 import '@testing-library/jest-dom';
 
 // Page Imports
@@ -18,7 +19,66 @@ import EditSelect from './src/app/api/pages/EditSelectPage/page.js';
 import EditResources from './src/app/api/pages/EditResources/page.js';
 import EditCategories from './src/app/api/pages/EditCategories/page.js';
 
+import server from './src/app/api/server.js';
+
 jest.mock('axios');
+
+// Tests for the server
+describe('Server Tests', () => {
+
+  it('Reads resource', async () => {
+    if (!server) {
+      throw new Error('Server is not defined');
+    }
+    const response = await request(server).get('/api/resources');
+    expect(response.status).toBe(200);
+  });
+
+  it('Creates resource', async () => {
+    const response = await request(server).post('/api/resources').send({ name: 'Test res', description: 'Test desc' });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+  });
+
+  it('Updates resource', async () => {
+    const id = 1;
+    const response = await request(server).put(`/api/resources/${id}`).send({ name: 'Test res', description: 'Test desc' });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('message');
+  });
+
+  it('Deletes resource', async () => {
+    const id = 1;
+    const response = await request(server).delete(`/api/resources/${id}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+  });
+
+  it('Reads category', async () => {
+    const response = await request(server).get('/api/categories');
+    expect(response.status).toBe(200);
+  });
+
+  it('Creates category', async () => {
+    const response = await request(server).post('/api/categories').send({ name: 'Test cat' });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+  });
+
+  it('Updates category', async () => {
+    const id = 1;
+    const response = await request(server).put(`/api/categories/${id}`).send({ name: 'Test cat'});
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('message');
+  });
+
+  it('Deletes category', async () => {
+    const id = 1;
+    const response = await request(server).delete(`/api/categories/${id}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+  });
+});
 
 // Home Page Tests
 describe('Home page', () => {
@@ -175,7 +235,7 @@ describe('Edit Resources page', () => {
     ];
 
     axios.get.mockResolvedValue({ data: resources });
-    
+  
     const { getByText, getByRole } = render(<EditResources editResource={editResourceMock} />);
     const resourceButton = await waitFor(() => getByRole('button', { name: 'Resource 1' }));
     fireEvent.click(resourceButton);
@@ -192,9 +252,14 @@ describe('Edit Resources page', () => {
 
     axios.get.mockResolvedValue({ data: resources });    
 
-    const { getByRole } = render(<EditResources />);
-    const deleteButton = getByRole('button', { name: 'Delete' });
+    const { getByRole, getByTestId } = render(<EditResources />);
+    const resourceButton = await waitFor(() => getByRole('button', { name: 'Resource 1' }));
+    fireEvent.click(resourceButton);
+    const deleteButton = await waitFor(() => getByTestId('trash'));
     fireEvent.click(deleteButton);
+    const deleteButton2 = await waitFor(() => getByRole('button', { name: 'Delete' }));
+    fireEvent.click(deleteButton2);
     waitFor(() => expect(deleteResourceMock).toHaveBeenCalledTimes(1));
   });
 });
+
