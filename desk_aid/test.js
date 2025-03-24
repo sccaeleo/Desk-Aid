@@ -26,6 +26,18 @@ jest.mock('axios');
 // Tests for the server
 describe('Server Tests', () => {
 
+  it('Sign in failure', async () => {
+    const response = await request(server).post('/api/signin').send({ username: 'invalid', password: 'invalid' });
+    expect(response.status).toBe(401);
+    expect(response.body.error).toBe('Invalid username or password');
+  });
+
+  it('Sign in success', async () => {
+    const response = await request(server).post('/api/signin').send({ username: 'admin', password: 'adpass' });
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+  });
+
   it('Reads resource', async () => {
     if (!server) {
       throw new Error('Server is not defined');
@@ -260,6 +272,43 @@ describe('Edit Resources page', () => {
     const deleteButton2 = await waitFor(() => getByRole('button', { name: 'Delete' }));
     fireEvent.click(deleteButton2);
     waitFor(() => expect(deleteResourceMock).toHaveBeenCalledTimes(1));
+  });
+});
+
+describe('Edit Guide Categories page', () => {
+  it('Renders edit guide categories page', () => {
+    const { getByText } = render(<EditCategories />);
+    expect(getByText('Edit Guide Categories')).toBeInTheDocument();
+  });
+
+  it('Renders categories', async () => {
+    const resources = [
+      { name: 'Cat 1' },
+      { name: 'Cat 2' },
+      { name: 'Cat 3' },
+    ];
+
+    axios.get.mockResolvedValue({ data: resources });
+
+    const { getByText } = render(<EditCategories />);
+    await waitFor(() => expect(getByText('Cat 1')).toBeInTheDocument());
+    await waitFor(() => expect(getByText('Cat 2')).toBeInTheDocument());
+    await waitFor(() => expect(getByText('Cat 3')).toBeInTheDocument());
+  });
+
+  it('Opens modal when add category button is clicked', async () => {
+    const { getByText, getByRole } = render(<EditCategories />);
+    const addButton = getByText('+ Add a Category');
+    fireEvent.click(addButton);
+    expect(getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('Closes modal when close button is clicked', async () => {
+    const { getByText, getByRole } = render(<EditCategories />);
+    const addButton = getByText('+ Add a Category');
+    fireEvent.click(addButton);
+    const closeButton = getByRole('button', { name: 'X' });
+    fireEvent.click(closeButton);
   });
 });
 

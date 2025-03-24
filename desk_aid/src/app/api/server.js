@@ -165,8 +165,8 @@ app.get("/api/guides", (req, res, next) => {
 });
 
 //Search guides
-function searchGuides(guideName){
 app.get("/api/guides", (req, res, next) => {
+    const { search } = req.params;
     var sql = "select " + guideName + " from guides"
     var params = []
     db.all(sql, params, (err, rows) => {
@@ -180,7 +180,7 @@ app.get("/api/guides", (req, res, next) => {
         })
     });
 });
-}
+
 
 // Create guide
 app.post("/api/guides", (req, res, next) => {
