@@ -8,12 +8,24 @@ const port = 4000;
 
 import db from "./database.js"
 
-
+const currentGuideID = 1
 
 // Check server
 app.get("/", (req, res, next) => {
     res.json({"message":"The server is up and running!"})
 });
+
+// Get current guide
+app.get("/api/currentGuideID", (req, res, next) => {
+    res.json({"currentGuideID":currentGuideID});
+});
+
+// Set current guide
+app.put("/api/currentGuideID:id", (req, res, next) => {
+    const { id } = req.params;
+    currentGuideID = id;
+    res.json({"currentGuideID":currentGuideID});
+})
 
 // Sign in
 app.post("/api/signin", (req, res, next) => {
@@ -155,6 +167,19 @@ app.delete("/api/categories/:id", (req, res, next) => {
 app.get("/api/guides", (req, res, next) => {
     var sql = "select * from guides"
     var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({"error":err.message});
+            return;
+        }
+        res.json(rows)
+    });
+});
+
+// Get one guide
+app.get("/api/guides/:id", (req, res, next) => {
+    var sql = "select * from guides where id = ?"
+    var params = [req.params.id]
     db.all(sql, params, (err, rows) => {
         if (err) {
             res.status(400).json({"error":err.message});

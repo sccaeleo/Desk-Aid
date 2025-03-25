@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import axios from 'axios'
 import { useState, useEffect } from 'react';
 
@@ -23,7 +24,10 @@ useEffect(() => {
     });
 }, []);
 
-
+/* Set current guide */
+const setCurrentGuide = (id) => {
+    axios.put(`http://localhost:4000/api/currentGuideID/${id}`)
+};
 
 return (
     <div className="">
@@ -32,9 +36,12 @@ return (
 
         {/* Guides */}
         {guides.map((guide, index) => (
-            <button className="hover:bg-blue-500 w-full h-10 rounded-md relative" key={index}>
+            <Link href={`/api/pages/GuidePage/`} key={index}>
+            <button className="hover:bg-blue-500 w-full h-10 rounded-md relative"
+            onClick= {setCurrentGuide(guide.id)}>
                 {guide.name}
             </button>
+            </Link>
         ))}
         </div>
     </div>
