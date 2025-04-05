@@ -16,7 +16,7 @@ export default function Page() {
             // If correct username and password, send to editselect
             if (response.data.success) {
                 window.location.href = "/api/protected";
-                window.location.href = "/pages/EditSelectPage";
+                window.location.href = "/EditSelectPage";
             } 
             else {
                 console.error(response.data.error);
