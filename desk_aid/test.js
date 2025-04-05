@@ -10,14 +10,14 @@ import request from 'supertest';
 import '@testing-library/jest-dom';
 
 // Page Imports
-import Home from './src/app/api/pages/page.js';
+import Home from './src/app/page.js';
 //import Guide from './src/app/GuidePage/page.js';
-import Resources from './src/app/api/pages/ResourcesPage/page.js';
-import Help from './src/app/api/pages/HelpPage/page.js';
-import SignIn from './src/app/api/pages/SignInPage/page.js';
-import EditSelect from './src/app/api/pages/EditSelectPage/page.js';
-import EditResources from './src/app/api/pages/EditResources/page.js';
-import EditCategories from './src/app/api/pages/EditCategories/page.js';
+import Resources from './src/app/ResourcesPage/page.js';
+import Help from './src/app/HelpPage/page.js';
+import SignIn from './src/app/SignInPage/page.js';
+import EditSelect from './src/app/EditSelectPage/page.js';
+import EditResources from './src/app/EditResources/page.js';
+import EditCategories from './src/app/EditCategories/page.js';
 
 import server from './src/app/api/server.js';
 

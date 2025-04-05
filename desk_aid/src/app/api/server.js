@@ -1,31 +1,41 @@
 import express from 'express';
 import cors from 'cors';
-
-const app = express();
-app.use(cors());
-app.use(express.json())
-const port = 4000;
-
+import expressSession from 'express-session';
 import db from "./database.js"
 
-const currentGuideID = 1
+// Set up session to store cookies
+const session = {
+    secret: 'cookies for breakfast',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}
+
+const app = express();
+const port = 4000;
+
+app.use(cors());
+app.use(express.json())
+app.use(expressSession(session));
 
 // Check server
 app.get("/", (req, res, next) => {
     res.json({"message":"The server is up and running!"})
 });
 
-// Get current guide
-app.get("/api/currentGuideID", (req, res, next) => {
-    res.json({"currentGuideID":currentGuideID});
-});
+// Check if user is signed in
+function isAuthenticated (req, res, next) {
+    if (req.session.user) {
+        next();
+    } 
+    else {
+        res.status(401).json({ error: 'You must be signed in to access this page' });
+    }
+}
 
-// Set current guide
-app.put("/api/currentGuideID:id", (req, res, next) => {
-    const { id } = req.params;
-    currentGuideID = id;
-    res.json({"currentGuideID":currentGuideID});
-})
+app.get('/api/protected', isAuthenticated, (req, res) => {
+    res.json({ message: 'You are signed in!' });
+});
 
 // Sign in
 app.post("/api/signin", (req, res, next) => {
@@ -42,7 +52,10 @@ app.post("/api/signin", (req, res, next) => {
         res.status(401).json({ error: "Invalid username or password" });
         return;
     }
-    res.json({ success: true });
+    if (row) {
+        req.session.user = row;
+        res.json({ success: true });
+    }
     });
 });
 
@@ -178,14 +191,17 @@ app.get("/api/guides", (req, res, next) => {
 
 // Get one guide
 app.get("/api/guides/:id", (req, res, next) => {
+    console.log("Single guide requested: " + req.params.id);
     var sql = "select * from guides where id = ?"
-    var params = [req.params.id]
+    const { id } = req.params;
+    var params = [id]
     db.all(sql, params, (err, rows) => {
         if (err) {
             res.status(400).json({"error":err.message});
             return;
         }
-        res.json(rows)
+        res.json(rows[0])
+        console.log(rows[0])
     });
 });
 

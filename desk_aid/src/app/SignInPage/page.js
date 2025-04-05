@@ -6,7 +6,6 @@ import { useState } from 'react';
 export default function Page() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     
     /* Sign in Function */
     const signIn = (e) => {
@@ -16,9 +15,8 @@ export default function Page() {
         .then((response) => {
             // If correct username and password, send to editselect
             if (response.data.success) {
-                setIsLoggedIn(true);
-                // Go to /api/pages/EditSelectPage
-                window.location.href = "/api/pages/EditSelectPage";
+                window.location.href = "/api/protected";
+                window.location.href = "/pages/EditSelectPage";
             } 
             else {
                 console.error(response.data.error);
