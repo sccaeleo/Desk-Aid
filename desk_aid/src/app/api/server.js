@@ -270,11 +270,37 @@ app.delete("/api/guides/:id", (req, res, next) => {
     });
 });
 
-// Get category_guides
+// Get all the steps for a guide
+app.get("/api/steps/:id", (req, res, next) => {
+    console.log("Steps requested for guide " + req.params.id);
+    const { id } = req.params;
+    var sql = "select * from steps where guideID = ?"
+    var params = [id]
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({"error":err.message});
+            return;
+        }
+        res.json(rows)
+        console.log(rows)
+    });
+})
 
-// Add category_guides link
-
-// Delete category_guides link
+// Get the steps connected to a step
+app.get("/api/step/:id", (req, res, next) => {
+    console.log("Steps requested for step " + req.params.id);
+    const { id } = req.params;
+    var sql = "select * from step_link where current_step_ID = ?"
+    var params = [id]
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({"error":err.message});
+            return;
+        }
+        res.json(rows)
+        console.log(rows)
+    });
+})
 
 // Start server
 app.listen(port, () => {
