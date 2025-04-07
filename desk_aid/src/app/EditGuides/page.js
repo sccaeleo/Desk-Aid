@@ -13,6 +13,10 @@ export default function Page() {
     const [add, setAdd] = useState(true);
     const [deleteModal, setDeleteModal] = useState(false);
 
+    const [categories, setCategories] = useState([]);
+    const[tempCategory,setTempCategory] = useState(null)
+
+    const [tempID, setTempID] = useState(null);
     /* Grab Guides */
     useEffect(() => {
         axios.get('http://localhost:4000/api/guides')
@@ -26,6 +30,13 @@ export default function Page() {
         .catch(error => {
             console.error(error);
         });
+        axios.get('http://localhost:4000/api/categories')
+        .then(response => {
+        setCategories(response.data);
+        })
+        .catch(error => {
+        console.error(error);
+    });
     }, []);
 
     /* Add Guide */
@@ -33,7 +44,10 @@ const addGuide = () => {
     axios.post('http://localhost:4000/api/guides', { name: editedGuide.name })
     .then((response) => {
         setGuides([...guides, editedGuide]);
-        setModal(false);
+        setTempID(JSON.stringify(response.id))
+        axios.post('http://localhost:4000/api/categories_tables', { categoryID: tempCategory,guideID: response })
+        .then((response) => {
+        })
     })
     .catch((error) => console.error(error));
 };
@@ -43,7 +57,6 @@ const editGuide = (id) => {
     axios.put(`http://localhost:4000/api/guides/${id}`, {name: editedGuide.name})
     .then(() => {
         setGuides(guides.map((guide) => (guide.id === editedGuide.id ? editedGuide : guide)));
-        setModal(false);
     })
     .catch((error) => console.error(error));
 };
@@ -53,11 +66,31 @@ const deleteGuide = (id) => {
     axios.delete(`http://localhost:4000/api/guides/${id}`)
     .then(() => {
         setGuides(guides.filter((guide) => guide.id !== id));
+        setModal(false)
+        setDeleteModal(false);
+    })
+    .catch((error) => console.error(error));
+};
+
+   /* Add categories_table */
+   const addCategories_table = (categoryID) => {
+    axios.post('http://localhost:4000/api/categories_tables', { categoryID: categoryID,guideID: editedGuide.id })
+    .then((response) => {
+    })
+    .catch((error) => console.error(error));
+};
+
+/* Delete categories_table */
+const deleteCategories_table = (id) => {
+    axios.delete(`http://localhost:4000/api/categories_tables/${id}`)
+    .then(() => {
+        setCategories_table(guides.filter((categories_table) => categories_table.id !== id));
         setModal(false);
         setDeleteModal(false);
     })
     .catch((error) => console.error(error));
 };
+
 
 return (
     <div>
@@ -103,15 +136,18 @@ return (
 
             {/* Heading */}
             <h2 className="text-lg font-bold mb-4">{add ? `Add New Guide` : 'Edit Guide'}</h2>
+            <h1>{tempID}</h1>
             
             {/* Form w Input and Buttons */}
             <form onSubmit={(e) => {
                 e.preventDefault();
                 if (!add) {
                     editGuide(editedGuide.id);
+                    addCategories_table(tempCategory)
                 } 
                 else {
                     addGuide(e);
+                    addCategories_table(tempCategory)
                 }
             }}>
                 {/* Input Box */}
@@ -122,6 +158,24 @@ return (
                 placeholder="Guide name"
                 className="w-full p-2 mb-4 border text-black border-gray-300 rounded-md"
                 />
+            
+                {/* Frankenstein into category search */}
+                
+                {/* Buttons of Categories */}
+                {categories.map((category, index) => (
+                <button 
+                type = "button"
+                className="hover:bg-blue-500 w-full h-10 rounded-md relative" key={index}
+                onClick={() => {
+                    setTempCategory(category.id)
+                    //addCategories_table(category.id)
+                        }}>
+                        {category.name}
+                    
+                    </button>
+                ))}
+                
+                
 
                 {/* Add/Save Button */}
                 <button 

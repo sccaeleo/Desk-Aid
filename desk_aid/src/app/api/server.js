@@ -302,6 +302,52 @@ app.get("/api/step/:id", (req, res, next) => {
     });
 })
 
+//////////////////////////////////////////////
+//Get categories_tables
+app.get("/api/categories_tables", (req, res, next) => {
+    var sql = "select * from categories_tables"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({"error":err.message});
+            return;
+        }
+        res.status(200).json(rows)
+    });
+});
+
+// Create categories_table
+app.post("/api/categories_tables", (req, res, next) => {
+    const { categoryID,guideID } = req.body; //makes a variable named categoryID
+    const sql = "INSERT INTO categories_tables (categoryID, guideID) VALUES (?, ?)";
+    const params = [categoryID,guideID]; //sets categoryID to param
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            console.error(err.message);
+            return;
+        }
+        res.status(200).json({ id: this.lastID });
+    });
+});
+
+
+// Delete category
+app.delete("/api/categories_tables/:id", (req, res, next) => {
+    db.run(
+        'DELETE FROM categories_tables WHERE categoryID = ?',
+        req.params.id,
+        function (err, result) {
+            if (err){
+                res.status(400).json({"error": res.message})
+                return;
+            }
+            res.status(200)
+    });
+});
+
+////////////////////////////////////////////
+
 // Start server
 app.listen(port, () => {
     console.log("Server running.")
