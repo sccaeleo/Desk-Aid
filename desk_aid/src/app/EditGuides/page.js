@@ -3,6 +3,8 @@
 import React from "react";
 import axios from 'axios'
 import { useState, useEffect } from "react";
+import Link from 'next/link'
+
 
 export default function Page() {
 
@@ -73,7 +75,7 @@ const deleteGuide = (id) => {
 };
 
    /* Add categories_table */
-   const addCategories_table = (categoryID) => {
+const addCategories_table = (categoryID) => {
     axios.post('http://localhost:4000/api/categories_tables', { categoryID: categoryID,guideID: editedGuide.id })
     .then((response) => {
     })
@@ -184,6 +186,17 @@ return (
                 >
                 {add ? 'Add Guide' : 'Save'}
                 </button>
+
+                {/* Edit Steps Button */}
+                {!add && (
+                <Link href={`EditGuideSteps/${editedGuide.id}`}>
+                <button
+                type="button" 
+                className=" hover:bg-blue-500 font-bold py-2 px-6 rounded-md">
+                Edit Steps
+                </button>
+                </Link>
+                )}
 
                 {/* Delete Button */}
                 {!add && (
