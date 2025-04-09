@@ -286,11 +286,80 @@ app.get("/api/steps/:id", (req, res, next) => {
     });
 })
 
-// Get the steps connected to a step
-app.get("/api/step/:id", (req, res, next) => {
-    console.log("Steps requested for step " + req.params.id);
+// Add a step
+
+app.post("/api/steps", (req, res, next) => {
+    const { name, description, guideID, parentStepID } = req.body;
+    const sql = "INSERT INTO steps (name, description, guideID, parentStepID) VALUES (?, ?, ?, ?)";
+    const params = [name, description, guideID, parentStepID];
+    db.run(sql, params, function (err) {
+        if (err) {
+            console.error(err.message);
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.status(200).json({ id: this.lastID });
+        console.log("Step added: " + this.lastID);
+    });
+    db.run(
+        'INSERT INTO step_link (parent_step_ID, child_step_ID, guideID) VALUES (?, ?, ?)',
+        [parentStepID, this.lastID, guideID],
+        function (err) {
+            if (err){
+                res.status(400).json({"error": res.message})
+                return;
+            }
+        }
+    )
+})
+
+// Edit a step
+app.put("/api/steps/:id", (req, res, next) => {
     const { id } = req.params;
-    var sql = "select * from step_link where current_step_ID = ?"
+    const { name, description } = req.body;
+    const sql = "UPDATE steps SET name = ?, description = ? WHERE id = ?";
+    const params = [name, description, id];
+    db.run(sql, params, function (err) {
+        if (err) {
+            console.error(err.message);
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        console.log("Step updated: " + id);
+    })
+})
+
+// Delete a step & its links, should only be used for end steps right now.
+app.delete("/api/steps/:id", (req, res, next) => {
+    db.run(
+        'DELETE FROM steps WHERE id = ?',
+        req.params.id,
+        function (err, result) {
+            if (err){
+                res.status(400).json({"error": res.message})
+                return;
+            }
+            console.log("Step deleted: " + req.params.id);
+        }
+    )
+    db.run(
+        'DELETE * FROM step_link WHERE current_step_ID = ? OR child_step_ID = ?',
+        req.params.id,
+        function (err, result) {
+            if (err){
+                res.status(400).json({"error": res.message})
+                return;
+            }
+            console.log("Step link deleted: " + req.params.id);
+        }
+    )
+})
+
+// Get the step links for a guide
+app.get("/api/stepLinks/:id", (req, res, next) => {
+    console.log("Step links requested for guide " + req.params.id);
+    const { id } = req.params;
+    var sql = "select * from step_link where guideID = ?"
     var params = [id]
     db.all(sql, params, (err, rows) => {
         if (err) {
@@ -299,7 +368,8 @@ app.get("/api/step/:id", (req, res, next) => {
         }
         res.json(rows)
         console.log(rows)
-    });
+    })
+    
 })
 
 //////////////////////////////////////////////
