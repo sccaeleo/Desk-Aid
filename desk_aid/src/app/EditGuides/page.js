@@ -17,6 +17,7 @@ export default function Page() {
 
     const [categories, setCategories] = useState([]);
     const[tempCategory,setTempCategory] = useState(null)
+    const [categories_tables, setCategories_tables] = useState([]);
 
     const [tempID, setTempID] = useState(null);
     /* Grab Guides */
@@ -53,18 +54,30 @@ export default function Page() {
         });
     };
 
- /* Add Guide */
+// Add Guide
 const addGuide = () => {
-    axios.post('http://localhost:4000/api/guides', { name: editedGuide.name })
+    console.log('Adding new guide...');
+    axios.get('http://localhost:4000/api/guides')
     .then((response) => {
-      setGuides([...guides, editedGuide]);
-      setEditedGuide({ ...editedGuide, id: response.data.id });
-      axios.post('http://localhost:4000/api/categories_tables', { categoryID: tempCategory, guideID: response.data.id })
-      .then((response) => {
-      })
+      const existingGuide = response.data.find(guide => guide.name.toLowerCase() === editedGuide.name.toLowerCase());
+      if (!existingGuide) {
+        axios.post('http://localhost:4000/api/guides', { name: editedGuide.name })
+        .then((response) => {
+          console.log('Guide added successfully:', response.data);
+          const newGuide = { ...editedGuide, id: response.data.id };
+          setGuides([...guides, newGuide]);
+          axios.post('http://localhost:4000/api/categories_tables', { categoryID: tempCategory, guideID: response.data.id })
+          .then((response) => {
+            console.log('Categories table updated successfully:', response.data);
+          })
+        })
+      } else {
+        console.log('Guide with the same name already exists');
+      }
     })
     .catch((error) => console.error(error));
   };
+
 
 /* Edit Guide */
 const editGuide = (id) => {
@@ -98,16 +111,28 @@ const addCategories_table = (categoryID) => {
     })
     .catch((error) => console.error(error));
   };
+
+  //////////////////////////////////
+
+
 /* Delete categories_table */
 const deleteCategories_table = (guideID) => {
+    console.log('Deleting categories_tables with guideID:', guideID);
     axios.delete(`http://localhost:4000/api/categories_tables?guideID=${guideID}`)
-    .then(() => {
-      setCategories_table(guides.filter((categories_table) => categories_table.guideID !== guideID));
+    .then((response) => {
+      console.log('Response from server:', response);
+      setCategories_tables(categories_tables.filter((item) => item.guideID !== guideID));
       setModal(false);
       setDeleteModal(false);
     })
-    .catch((error) => console.error(error));
+    .catch((error) => {
+      console.error('Error deleting categories_table:', error);
+    });
   };
+
+
+
+////////////////////////////////////////
 
 return (
     <div>
@@ -164,7 +189,7 @@ return (
                 } 
                 else {
                     addGuide(e);
-                    addCategories_table(tempCategory)
+                    //addCategories_table(tempCategory)
                 }
             }}>
                 {/* Input Box */}

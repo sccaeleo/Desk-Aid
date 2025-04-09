@@ -409,19 +409,19 @@ app.post("/api/categories_tables", (req, res, next) => {
 
 
 // Delete category_tables guide
-app.delete("/api/categories_tables", (req, res, next) => {
+
+app.delete('/api/categories_tables', (req, res) => {
     const guideID = req.query.guideID;
-    db.run(
-      'DELETE FROM categories_tables WHERE guideID = ?',
-      guideID,
-      function (err, result) {
-        if (err){
-          res.status(400).json({"error": res.message})
-          return;
-        }
-        res.status(200)
-      });
+    db.run(`DELETE FROM categories_tables WHERE guideID = ${guideID}`, (err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send({ message: 'Error deleting record' });
+      } else {
+        res.send({ message: 'Record deleted successfully' });
+      }
+    });
   });
+
 
 
 ////////////////////////////////////////////
