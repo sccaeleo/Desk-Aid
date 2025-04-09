@@ -332,10 +332,10 @@ app.post("/api/categories_tables", (req, res, next) => {
 });
 
 
-// Delete category
+// Delete category_tables guide
 app.delete("/api/categories_tables/:id", (req, res, next) => {
     db.run(
-        'DELETE FROM categories_tables WHERE categoryID = ?',
+        'DELETE FROM categories_tables WHERE guideID = ?',
         req.params.id,
         function (err, result) {
             if (err){
