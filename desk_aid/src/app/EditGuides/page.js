@@ -41,18 +41,30 @@ export default function Page() {
     });
     }, []);
 
-    /* Add Guide */
+
+    const searchGuidesByName = (name) => {
+        return axios.get('http://localhost:4000/api/guides', {
+            params: { name }
+        })
+        .then((response) => response.data)
+        .catch((error) => {
+            console.error("Search error:", error);
+            return [];
+        });
+    };
+
+ /* Add Guide */
 const addGuide = () => {
     axios.post('http://localhost:4000/api/guides', { name: editedGuide.name })
     .then((response) => {
-        setGuides([...guides, editedGuide]);
-        setTempID(JSON.stringify(response.id))
-        axios.post('http://localhost:4000/api/categories_tables', { categoryID: tempCategory,guideID: response })
-        .then((response) => {
-        })
+      setGuides([...guides, editedGuide]);
+      setEditedGuide({ ...editedGuide, id: response.data.id });
+      axios.post('http://localhost:4000/api/categories_tables', { categoryID: tempCategory, guideID: response.data.id })
+      .then((response) => {
+      })
     })
     .catch((error) => console.error(error));
-};
+  };
 
 /* Edit Guide */
 const editGuide = (id) => {
@@ -67,32 +79,35 @@ const editGuide = (id) => {
 const deleteGuide = (id) => {
     axios.delete(`http://localhost:4000/api/guides/${id}`)
     .then(() => {
-        setGuides(guides.filter((guide) => guide.id !== id));
-        setModal(false)
-        setDeleteModal(false);
+      setGuides(guides.filter((guide) => guide.id !== id));
+      deleteCategories_table(id); // pass the guideID to deleteCategories_table
+      setModal(false)
+      setDeleteModal(false);
     })
     .catch((error) => console.error(error));
-};
+  };
 
-   /* Add categories_table */
+/* Add categories_table */
 const addCategories_table = (categoryID) => {
-    axios.post('http://localhost:4000/api/categories_tables', { categoryID: categoryID,guideID: editedGuide.id })
+    axios.post('http://localhost:4000/api/guides', { name: editedGuide.name })
     .then((response) => {
+      axios.post('http://localhost:4000/api/categories_tables', { categoryID: categoryID, guideID: response.data.id })
+      .then((response) => {
+      })
+      .catch((error) => console.error(error));
     })
     .catch((error) => console.error(error));
-};
-
+  };
 /* Delete categories_table */
-const deleteCategories_table = (id) => {
-    axios.delete(`http://localhost:4000/api/categories_tables/${id}`)
+const deleteCategories_table = (guideID) => {
+    axios.delete(`http://localhost:4000/api/categories_tables?guideID=${guideID}`)
     .then(() => {
-        setCategories_table(guides.filter((categories_table) => categories_table.id !== id));
-        setModal(false);
-        setDeleteModal(false);
+      setCategories_table(guides.filter((categories_table) => categories_table.guideID !== guideID));
+      setModal(false);
+      setDeleteModal(false);
     })
     .catch((error) => console.error(error));
-};
-
+  };
 
 return (
     <div>

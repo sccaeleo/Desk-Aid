@@ -206,19 +206,25 @@ app.get("/api/guides/:id", (req, res, next) => {
 });
 
 //Search guides
-app.get("/api/guides", (req, res, next) => {
-    const { search } = req.params;
-    var sql = "select " + guideName + " from guides"
-    var params = []
+app.get("/api/guides", (req, res) => {
+    const { search } = req.query;
+    let sql = "SELECT * FROM guides";
+    const params = [];
+
+    if (search) {
+        sql += " WHERE name LIKE ?";
+        params.push(`%${search}%`);
+    }
+
     db.all(sql, params, (err, rows) => {
         if (err) {
-            res.status(400).json({"error":err.message});
+            res.status(400).json({ "error": err.message });
             return;
         }
         res.json({
-            "message":"success",
-            "data":rows
-        })
+            "message": "success",
+            "data": rows
+        });
     });
 });
 
@@ -403,18 +409,20 @@ app.post("/api/categories_tables", (req, res, next) => {
 
 
 // Delete category_tables guide
-app.delete("/api/categories_tables/:id", (req, res, next) => {
+app.delete("/api/categories_tables", (req, res, next) => {
+    const guideID = req.query.guideID;
     db.run(
-        'DELETE FROM categories_tables WHERE guideID = ?',
-        req.params.id,
-        function (err, result) {
-            if (err){
-                res.status(400).json({"error": res.message})
-                return;
-            }
-            res.status(200)
-    });
-});
+      'DELETE FROM categories_tables WHERE guideID = ?',
+      guideID,
+      function (err, result) {
+        if (err){
+          res.status(400).json({"error": res.message})
+          return;
+        }
+        res.status(200)
+      });
+  });
+
 
 ////////////////////////////////////////////
 
