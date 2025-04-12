@@ -71,6 +71,8 @@ export default function Page() {
         .then(() => {
             setSteps(steps.filter((step) => step.id !== id));
             setStepLinks(stepLinks.filter((link) => link.current_step_ID !== id && link.child_step_ID !== id));
+            setSelectedStep(null);
+            setDeleteModal(false);
         })
         .catch((error) => {
             console.error(error);

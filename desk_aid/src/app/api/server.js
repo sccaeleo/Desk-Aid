@@ -342,27 +342,27 @@ app.delete("/api/steps/:id", (req, res, next) => {
     db.run(
         'DELETE FROM steps WHERE id = ?',
         req.params.id,
-        function (err, result) {
-            if (err){
-                res.status(400).json({"error": res.message})
+        function (err) {
+            if (err) {
+                res.status(400).json({ "error": err.message });
                 return;
             }
             console.log("Step deleted: " + req.params.id);
             db.run(
-                'DELETE * FROM step_link WHERE current_step_ID = ? OR child_step_ID = ?',
-                req.params.id,
-                function (err, result) {
-                    if (err){
-                        res.status(400).json({"error": res.message})
+                'DELETE FROM step_link WHERE current_step_ID = ? OR child_step_ID = ?',
+                [req.params.id, req.params.id],
+                function (err) {
+                    if (err) {
+                        res.status(400).json({ "error": err.message });
                         return;
                     }
                     console.log("Step link deleted: " + req.params.id);
+                    res.status(200).json({ message: "Step and linked steps deleted successfully" });
                 }
-            )
+            );
         }
-    )
-    
-})
+    );
+});
 
 // Get the step links for a guide
 app.get("/api/stepLinks/:id", (req, res, next) => {
