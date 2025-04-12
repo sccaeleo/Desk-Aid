@@ -13,6 +13,7 @@ export default function Page() {
     const [stepLinks, setStepLinks] = useState([]);
     const [selectedStep, setSelectedStep] = useState(null);
     const [deleteModal, setDeleteModal] = useState(false);
+    const [addModal, setAddModal] = useState(false);
 
 
     // Grab Steps & Links
@@ -30,6 +31,24 @@ export default function Page() {
 
     }, [id]);
 
+    // Add step
+    const addStep = (parentID, name, description) => {
+        axios.post(`http://localhost:4000/api/steps/`, {
+            name: name,
+            description: description,
+            guideID: steps[0].guideID,
+            parentStepID: parentID
+        })
+        .then((response) => {
+            setSteps([...steps, response.data]);
+            setAddModal(false);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }
+
+
 
     // Edit step
     const editStep = (name, description) => {
@@ -38,8 +57,8 @@ export default function Page() {
             description: description
         })
         .then((response) => {
-            setSelectedStep(null);
             setSteps(steps.map((step) => (step.id === selectedStep.id ? response.data : step)));
+            setSelectedStep(null);
         })
         .catch((error) => {
             console.error(error);
@@ -127,6 +146,13 @@ export default function Page() {
                             Save
                         </button>
 
+                        {/* Add New Step Button */}
+                        <button 
+                        className=" hover:bg-blue-500 font-bold py-2 px-4 rounded-md"
+                        onClick={() => setAddModal(true)}>
+                            Add New Step
+                        </button>
+
                         {/* Delete Button if step has no children (is an end step) */}
                         {stepLinks.filter((link) => link.current_step_ID === selectedStep.id).length === 0 && (
                         <button
@@ -141,6 +167,35 @@ export default function Page() {
                     </form>
                 </div>
             </div>
+            )}
+
+            {/* Add Step Modal */}
+            {addModal && (
+                <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex justify-center items-center">
+                    <div className="bg-blue-950 p-4 rounded-md w-1/2 relative">
+                        <h2 className="text-2xl">Add New Step</h2>
+                        <form onSubmit={(e) => {
+                            e.preventDefault();
+                            addStep(selectedStep.id, e.target.elements.name.value, e.target.elements.description.value);
+                        }}>
+                            {/* Close Button */}
+                            <button 
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-md absolute top-4 right-4"
+                                onClick={() => setAddModal(null)}>
+                                X
+                            </button>
+                            <label className="block mb-2" htmlFor="name">Name:</label>
+                            <input className="block w-full mb-2 text-black" type="text" id="name" name="name" />
+                            <label className="block mb-2" htmlFor="description">Description:</label>
+                            <textarea className="block w-full mb-2 text-black" id="description" name="description"></textarea>
+                            <button 
+                            className=" hover:bg-blue-500 font-bold py-2 px-4 rounded-md" 
+                            type="submit">
+                                Save
+                            </button>
+                        </form>
+                    </div>
+                </div>
             )}
 
             {/* Delete Confirmation Popup */}

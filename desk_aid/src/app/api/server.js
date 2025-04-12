@@ -295,28 +295,30 @@ app.get("/api/steps/:id", (req, res, next) => {
 // Add a step
 
 app.post("/api/steps", (req, res, next) => {
-    const { name, description, guideID, parentStepID } = req.body;
-    const sql = "INSERT INTO steps (name, description, guideID, parentStepID) VALUES (?, ?, ?, ?)";
-    const params = [name, description, guideID, parentStepID];
-    db.run(sql, params, function (err) {
-        if (err) {
-            console.error(err.message);
-            res.status(400).json({ error: err.message });
-            return;
-        }
-        res.status(200).json({ id: this.lastID });
-        console.log("Step added: " + this.lastID);
-    });
     db.run(
-        'INSERT INTO step_link (parent_step_ID, child_step_ID, guideID) VALUES (?, ?, ?)',
-        [parentStepID, this.lastID, guideID],
-        function (err) {
-            if (err){
-                res.status(400).json({"error": res.message})
+        'INSERT INTO steps (name, description, guideID, parentStepID) VALUES (?, ?, ?, ?)',
+        req.body.name, req.body.description, req.body.guideID, req.body.parentStepID,
+        function(err) {
+            if (err) {
+                console.error(err.message);
+                res.status(400).json({ error: err.message });
                 return;
             }
+            db.run(
+                'INSERT INTO step_link (current_step_ID, child_step_ID, guideID) VALUES (?, ?, ?)',
+                req.body.parentStepID, this.lastID, req.body.guideID,
+                function(err) {
+                    if (err) {
+                        console.error(err.message);
+                        res.status(400).json({ error: err.message });
+                        return;
+                    }
+                    res.json({ id: this.lastID, name: req.body.name, description: req.body.description, guideID: req.body.guideID, parentStepID: req.body.parentStepID });
+                }
+            );
         }
-    )
+    );
+    
 })
 
 // Edit a step
@@ -346,19 +348,20 @@ app.delete("/api/steps/:id", (req, res, next) => {
                 return;
             }
             console.log("Step deleted: " + req.params.id);
+            db.run(
+                'DELETE * FROM step_link WHERE current_step_ID = ? OR child_step_ID = ?',
+                req.params.id,
+                function (err, result) {
+                    if (err){
+                        res.status(400).json({"error": res.message})
+                        return;
+                    }
+                    console.log("Step link deleted: " + req.params.id);
+                }
+            )
         }
     )
-    db.run(
-        'DELETE * FROM step_link WHERE current_step_ID = ? OR child_step_ID = ?',
-        req.params.id,
-        function (err, result) {
-            if (err){
-                res.status(400).json({"error": res.message})
-                return;
-            }
-            console.log("Step link deleted: " + req.params.id);
-        }
-    )
+    
 })
 
 // Get the step links for a guide
