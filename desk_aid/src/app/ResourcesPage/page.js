@@ -32,9 +32,9 @@ return (
     <div>
     {/* List of Resources*/}
     <h1>Resources</h1>
-    <div className="absolute w-11/12 h-full grid grid-cols-5 gap-4" style={{ left: '50%', transform: 'translateX(-50%)' }}>
+    <div className="absolute w-full h-1 grid grid-cols-5 gap-4 p-3">
     {resources.map((resource, index) => (
-        <button role="button" className="hover:bg-blue-500 w-full h-10 rounded-md" 
+        <button role="button" className="hover:bg-blue-500 w-full h-10 rounded-md relative" 
         onClick={() => clickResource(resource)} 
         key={index}>{resource.name}
         </button>
