@@ -59,24 +59,25 @@ const addGuide = () => {
     console.log('Adding new guide...');
     axios.get('http://localhost:4000/api/guides')
     .then((response) => {
-      const existingGuide = response.data.find(guide => guide.name.toLowerCase() === editedGuide.name.toLowerCase());
-      if (!existingGuide) {
+        const existingGuide = response.data.find(guide => guide.name.toLowerCase() === editedGuide.name.toLowerCase());
+        if (!existingGuide) {
         axios.post('http://localhost:4000/api/guides', { name: editedGuide.name })
         .then((response) => {
-          console.log('Guide added successfully:', response.data);
-          const newGuide = { ...editedGuide, id: response.data.id };
-          setGuides([...guides, newGuide]);
-          axios.post('http://localhost:4000/api/categories_tables', { categoryID: tempCategory, guideID: response.data.id })
-          .then((response) => {
+            console.log('Guide added successfully:', response.data);
+            const newGuide = { ...editedGuide, id: response.data.id };
+            setGuides([...guides, newGuide]);
+            axios.post('http://localhost:4000/api/categories_tables', { categoryID: tempCategory, guideID: response.data.id })
+            .then((response) => {
             console.log('Categories table updated successfully:', response.data);
-          })
         })
-      } else {
+        })
+    } 
+    else {
         console.log('Guide with the same name already exists');
-      }
+    }
     })
     .catch((error) => console.error(error));
-  };
+};
 
 
 /* Edit Guide */
@@ -92,25 +93,26 @@ const editGuide = (id) => {
 const deleteGuide = (id) => {
     axios.delete(`http://localhost:4000/api/guides/${id}`)
     .then(() => {
-      setGuides(guides.filter((guide) => guide.id !== id));
-      deleteCategories_table(id); // pass the guideID to deleteCategories_table
-      setModal(false)
-      setDeleteModal(false);
+        setGuides(guides.filter((guide) => guide.id !== id));
+        deleteCategories_table(id); // pass the guideID to deleteCategories_table
+        setModal(false)
+        setDeleteModal(false);
     })
     .catch((error) => console.error(error));
-  };
+};
 
 /* Add categories_table */
 const addCategories_table = (categoryID) => {
     axios.post('http://localhost:4000/api/guides', { name: editedGuide.name })
     .then((response) => {
-      axios.post('http://localhost:4000/api/categories_tables', { categoryID: categoryID, guideID: response.data.id })
-      .then((response) => {
-      })
-      .catch((error) => console.error(error));
+        axios.post('http://localhost:4000/api/categories_tables', { categoryID: categoryID, guideID: response.data.id })
+        .then((response) => {
+        })
+
+        .catch((error) => console.error(error));
     })
     .catch((error) => console.error(error));
-  };
+};
 
   //////////////////////////////////
 
@@ -120,15 +122,15 @@ const deleteCategories_table = (guideID) => {
     console.log('Deleting categories_tables with guideID:', guideID);
     axios.delete(`http://localhost:4000/api/categories_tables?guideID=${guideID}`)
     .then((response) => {
-      console.log('Response from server:', response);
-      setCategories_tables(categories_tables.filter((item) => item.guideID !== guideID));
-      setModal(false);
-      setDeleteModal(false);
+        console.log('Response from server:', response);
+        setCategories_tables(categories_tables.filter((item) => item.guideID !== guideID));
+        setModal(false);
+        setDeleteModal(false);
     })
     .catch((error) => {
-      console.error('Error deleting categories_table:', error);
+        console.error('Error deleting categories_table:', error);
     });
-  };
+};
 
 
 
@@ -138,17 +140,23 @@ return (
     <div>
         <h1>Edit Guides</h1>
 
-        {/* Button Fiasco */}
-        <div className="absolute w-full h-1 grid grid-cols-5 gap-4 p-3">
-
         {/* Add Guide Button */}
         <button className="hover:bg-blue-500 w-full h-10 rounded-md" 
         onClick={() => {
             setEditedGuide({name: ''});
             setAdd(true);
             setModal(true);}}>
-        + Add a Guide
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        <p>Add a Guide</p>
+        
         </button>
+
+        {/* Button Fiasco */}
+        <div className="absolute w-full h-1 grid grid-cols-5 gap-4 p-3">
+
+        
 
         {/* Guide Buttons */}
         {guides.map((guide, index) => (
