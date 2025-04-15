@@ -28,6 +28,7 @@ const [query, setQuery] = useState('');
   }, []);
 
 return (
+  <div>
   <div className="flex-col text-center">
     {/* Logo */}
     <Image
@@ -60,10 +61,12 @@ return (
       <button type="submit" className='text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2'>Search</button>
     </div>
     </form>
+    </div>
 
 
 
     {/* List of Guide Categories*/}
+    <p className="text-lg font-bold ml-3">Guide Categories: </p>
     <div className="grid grid-cols-4 gap-4 p-3">
       {categories.map((category, index) => (
         <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={index}>

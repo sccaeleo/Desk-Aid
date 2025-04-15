@@ -3,6 +3,7 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link'
 
 export default function Page() {
 const {id} = useParams();
@@ -51,21 +52,34 @@ return (
         {/* Title of current step and its description */}
         <div className="flex flex-col text-center">
         <h1>{currStep?.name}</h1>
-        <p className='text-lg'>{currStep?.description}</p>
+        <p className="text-xl mt-20">{currStep?.description}</p>
         {/* TODO tooltip goes here */}
 
         {/* The buttons for the next step */}
         <div className="fixed bottom-10 left-0 w-full flex justify-center">
-        {childSteps.map((child, index) => (
-            <button 
-            className="hover:bg-blue-500 w-full h-20 rounded-md m-2"
-            key={index}
-            onClick={() => changeStep(child.id)}>
-                {child.name}
-            </button>
-        ))}
+        {childSteps.length > 0 ? 
+            childSteps.map((child, index) => (
+                <button 
+                className="hover:bg-blue-500 w-full h-20 rounded-md m-2"
+                key={index}
+                onClick={() => changeStep(child.id)}>
+                    <p className="text-ellipsis overflow-hidden whitespace-nowrap text-xl font-bold">
+                        {child.name}
+                    </p>
+                </button>
+            ))
+        :
+            <Link href="/GuideListPage" className='w-full'>
+                <button className='hover:bg-blue-500 w-1/3 h-20 rounded-md m-2'>
+                <p className="text-xl font-bold">
+                    Done
+                </p>
+                </button>
+            </Link>
+        }
         </div>
         </div>
     </div>
 );
 }
+
