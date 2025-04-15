@@ -58,17 +58,22 @@ return (
     <div>
         <h1>Edit Guide Categories</h1>
 
-        {/* The Buttonsssss */}
-        <div className="absolute w-full h-1 grid grid-cols-5 gap-4 p-3">
-
         {/* Add Category Button */}
-        <button className="hover:bg-blue-500 w-full h-10 rounded-md" 
+        <button className="bg-green-600 hover:bg-green-700 h-10 rounded-md absolute bottom-10 right-10 flex items-center" 
         onClick={() => {
             setEditedCategory({name: ''});
             setAdd(true);
             setModal(true);}}>
-        + Add a Category
+        <div className="flex items-center pl-1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        </div>
+        <p className="px-2">Add a Category</p>
         </button>
+
+        {/* The Buttonsssss */}
+        <div className="absolute w-full h-1 grid grid-cols-5 gap-4 p-3">
 
         {/* Buttons of Categories */}
         {categories.map((category, index) => (
@@ -78,7 +83,9 @@ return (
                 setModal(true);
                 setAdd(false);
                 }}>
-                {category.name}
+                <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
+                    {category.name}
+                </p>
             
             </button>
         ))}

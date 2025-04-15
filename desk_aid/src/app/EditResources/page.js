@@ -60,16 +60,23 @@ return (
         {/* List of Resources*/}
         <h1>Edit Resources</h1>
 
-        <div className="absolute w-full h-1 grid grid-cols-5 gap-4 p-3">
-
         {/* Add Resource Button */}
-        <button className="hover:bg-blue-500 w-full h-10 rounded-md" 
+        <button className="bg-green-600 hover:bg-green-700 h-10 rounded-md absolute bottom-10 right-10 flex items-center" 
             onClick={() => {
                 setEditedResource({name: ''});
                 setAdd(true);
                 setModal(true);}}>
-            + Add a Resource
+            <div className="flex items-center pl-1">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            </div>
+            <p className="px-2">Add a Resource</p>
         </button>
+
+        <div className="absolute w-full h-1 grid grid-cols-5 gap-4 p-3">
+
+        
 
         {/* Buttons of Resources */}
         {resources.map((resource, index) => (
@@ -79,7 +86,9 @@ return (
                 setModal(true);
                 setAdd(false);
                 }}>
+                <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
                 {resource.name}
+                </p>
             
             </button>
         ))}
@@ -133,8 +142,8 @@ return (
                 {/* Add/Save Button */}
                 <button 
                 type="submit" 
-                className={`hover:bg-blue-500 font-bold py-2 px-4 rounded-md ${!(editedResource.name && editedResource.description) ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={!(editedResource.name && editedResource.description)}
+                className={`hover:bg-blue-500 font-bold py-2 px-4 rounded-md ${!(editedResource.name) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!(editedResource.name)}
                 > 
                 {add ? 'Add Resource' : 'Save'}
                 </button>

@@ -141,16 +141,17 @@ return (
         <h1>Edit Guides</h1>
 
         {/* Add Guide Button */}
-        <button className="hover:bg-blue-500 w-full h-10 rounded-md" 
+        <button className="bg-green-600 hover:bg-green-700 h-10 rounded-md absolute bottom-10 right-10 flex items-center" 
         onClick={() => {
             setEditedGuide({name: ''});
             setAdd(true);
             setModal(true);}}>
+        <div className="flex items-center pl-1">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
         </svg>
-        <p>Add a Guide</p>
-        
+        </div>
+        <p className="px-2" >Add a Guide</p>
         </button>
 
         {/* Button Fiasco */}
@@ -166,7 +167,9 @@ return (
                 setModal(true);
                 setAdd(false);
                 }}>
+                <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
                 {guide.name}
+                </p>
             
             </button>
         ))}
@@ -175,7 +178,7 @@ return (
         {/* Popup for Guides */}
         {modal && (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex justify-center items-center">
-            <div className="bg-blue-950 p-4 rounded-md w-1/2 relative">
+            <div className="bg-blue-950 p-4 rounded-md w-1/2 h-1/2 relative">
 
             {/* Close Button */}
             <button 
@@ -211,11 +214,13 @@ return (
             
                 {/* Frankenstein into category search */}
                 
+                <p className="font-bold mb-4">Select Category:</p>
                 {/* Buttons of Categories */}
+                <div className="relative w-full h-1 grid grid-cols-5">
                 {categories.map((category, index) => (
                 <button 
                 type = "button"
-                className="hover:bg-blue-500 w-full h-10 rounded-md relative" key={index}
+                className="hover:bg-blue-500 h-10 rounded-md relative m-1" key={index}
                 onClick={() => {
                     setTempCategory(category.id)
                     //addCategories_table(category.id)
@@ -224,13 +229,13 @@ return (
                     
                     </button>
                 ))}
-                
+                </div>
                 
 
                 {/* Add/Save Button */}
                 <button 
                 type="submit" 
-                className=" hover:bg-blue-500 font-bold py-2 px-4 rounded-md"
+                className=" bg-green-600 hover:bg-green-700 font-bold py-2 px-4 rounded-md absolute bottom-4 right-4"
                 >
                 {add ? 'Add Guide' : 'Save'}
                 </button>
