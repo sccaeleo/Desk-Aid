@@ -74,6 +74,7 @@ return (
       <button type="submit" className='text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2'>Search</button>
     </div>
     </form>
+<<<<<<< Updated upstream
     </div>
 
 
@@ -100,6 +101,33 @@ return (
         </div>
       )}
     </div>
+=======
+
+
+
+    {searchResults.length > 0 ? (
+        <div className="grid grid-cols-4 gap-4 p-3">
+          {searchResults.map((guide, index) => (
+            <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={`guide-${index}`}>
+              <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
+                {guide.name}
+              </p>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-4 gap-4 p-3">
+          {categories.map((category, index) => (
+            <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={`category-${index}`}>
+              <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
+                {category.name}
+              </p>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+>>>>>>> Stashed changes
   );
 }
 
