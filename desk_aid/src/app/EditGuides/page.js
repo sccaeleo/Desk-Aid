@@ -43,16 +43,17 @@ export default function Page() {
     }, []);
 
 
+    //Search function for guides
     const searchGuidesByName = (name) => {
         return axios.get('http://localhost:4000/api/guides', {
-            params: { name }
+          params: { search: name }
         })
         .then((response) => response.data)
         .catch((error) => {
-            console.error("Search error:", error);
-            return [];
+          console.error("Search error:", error);
+          return [];
         });
-    };
+      };
 
 // Add Guide
 const addGuide = () => {

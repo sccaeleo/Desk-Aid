@@ -8,12 +8,25 @@ import Image from "next/image";
 export default function Home() {
 const [categories, setCategories] = useState([]);
 const [query, setQuery] = useState('');
+const [searchResults, setSearchResults] = useState([]);
+
 
   /* Search Function */
   const search = (e) => {
-    // Todo by Tim
-    
-
+    e.preventDefault();
+    const searchString = query.trim();
+    if (typeof searchString === 'string' && searchString) {
+      axios.get('http://localhost:4000/api/guides')
+        .then((response) => {
+          const filteredResults = response.data.filter((guide) => guide.name.toLowerCase().includes(searchString.toLowerCase()));
+          setSearchResults(filteredResults);
+        })
+        .catch((error) => {
+          console.error("Search error:", error);
+        });
+    } else {
+      setSearchResults([]);
+    }
   };
 
   /* Get Guide Categories */
@@ -51,12 +64,12 @@ return (
             </svg>
       </div>
       <input 
-        className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
         type="text"
+        id="search"
+        className="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for a guide..."
-        required
       />
       <button type="submit" className='text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2'>Search</button>
     </div>
@@ -65,19 +78,35 @@ return (
 
 
 
-    {/* List of Guide Categories*/}
-    <p className="text-lg font-bold ml-3">Guide Categories: </p>
-    <div className="grid grid-cols-4 gap-4 p-3">
-      {categories.map((category, index) => (
-        <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={index}>
-          <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
-          {category.name}
-          </p>
-        </button>
-      ))}
+    {searchResults.length > 0 ? (
+        <div className="grid grid-cols-4 gap-4 p-3">
+          {searchResults.map((guide, index) => (
+            <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={`guide-${index}`}>
+              <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
+                {guide.name}
+              </p>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-4 gap-4 p-3">
+          {categories.map((category, index) => (
+            <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={`category-${index}`}>
+              <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
+                {category.name}
+              </p>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
-  </div>
-);
+  );
 }
+
+
+
+
+
+
 
 

@@ -206,27 +206,28 @@ app.get("/api/guides/:id", (req, res, next) => {
 });
 
 //Search guides
-app.get("/api/guides", (req, res) => {
-    const { search } = req.query;
-    let sql = "SELECT * FROM guides";
-    const params = [];
-
-    if (search) {
-        sql += " WHERE name LIKE ?";
-        params.push(`%${search}%`);
-    }
-
-    db.all(sql, params, (err, rows) => {
+app.get('/api/guides', (req, res) => {
+    const searchQuery = req.query.search;
+    if (searchQuery) {
+      db.all(`SELECT * FROM guides WHERE name LIKE '${searchQuery}%'`, (err, rows) => {
         if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
+          console.error(err);
+          res.status(500).send({ message: 'Error searching for guides' });
+        } else {
+          res.send(rows);
         }
-        res.json({
-            "message": "success",
-            "data": rows
-        });
-    });
-});
+      });
+    } else {
+      db.all('SELECT * FROM guides', (err, rows) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send({ message: 'Error fetching guides' });
+        } else {
+          res.send(rows);
+        }
+      });
+    }
+  });
 
 
 // Create guide
