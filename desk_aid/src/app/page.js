@@ -97,24 +97,14 @@ return (
 ) : (
   <div className="grid grid-cols-4 gap-4 p-3">
     {categories.map((category, index) => (
-      <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={`category-${index}`}>
-        <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
+      <Link href={`GuidePage/${category.id}`} key={index}>
+        <button className="hover:bg-blue-500 w-full h-10 rounded-md relative">
           {category.name}
-        </p>
-      </button>
+        </button>
+      </Link>
     ))}
   </div>
 )}
     </div>
-
-
   );
 }
-
-
-
-
-
-
-
-
