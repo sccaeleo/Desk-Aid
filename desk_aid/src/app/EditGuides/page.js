@@ -220,7 +220,7 @@ return (
                 {categories.map((category, index) => (
                 <button 
                 type = "button"
-                className="hover:bg-blue-500 h-10 rounded-md relative m-1" key={index}
+                className="hover:bg-blue-500 h-10 rounded-md relative m-1 text-ellipsis overflow-hidden whitespace-nowrap px-2" key={index}
                 onClick={() => {
                     setTempCategory(category.id)
                     //addCategories_table(category.id)
@@ -242,10 +242,10 @@ return (
 
                 {/* Edit Steps Button */}
                 {!add && (
-                <Link href={`EditGuideSteps/${editedGuide.id}`}>
+                <Link href={`EditGuideSteps/${editedGuide.id}` }>
                 <button
                 type="button" 
-                className=" hover:bg-blue-500 font-bold py-2 px-6 rounded-md">
+                className=" hover:bg-blue-500 font-bold py-2 px-6 rounded-md absolute bottom-4">
                 Edit Steps
                 </button>
                 </Link>
