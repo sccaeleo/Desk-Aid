@@ -9,6 +9,7 @@ export default function Home() {
 const [categories, setCategories] = useState([]);
 const [query, setQuery] = useState('');
 const [searchResults, setSearchResults] = useState([]);
+const [selectedGuide, setSelectedGuide] = useState(null);
 
 
   /* Search Function */
@@ -29,9 +30,13 @@ const [searchResults, setSearchResults] = useState([]);
     }
   };
 
+  const handleGuideClick = (guide) => {
+    setSelectedGuide(guide);
+  };
+
   /* Get Guide Categories */
   useEffect(() => {
-    axios.get('http://localhost:4000/api/categories')
+    axios.get('http://localhost:4000/api/guides')
     .then(response => {
       setCategories(response.data);
     })
@@ -80,26 +85,26 @@ return (
 
 
     {searchResults.length > 0 ? (
-        <div className="grid grid-cols-4 gap-4 p-3">
-          {searchResults.map((guide, index) => (
-            <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={`guide-${index}`}>
-              <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
-                {guide.name}
-              </p>
-            </button>
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-4 gap-4 p-3">
-          {categories.map((category, index) => (
-            <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={`category-${index}`}>
-              <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
-                {category.name}
-              </p>
-            </button>
-          ))}
-        </div>
-      )}
+  <div className="grid grid-cols-4 gap-4 p-3">
+    {searchResults.map((guide, index) => (
+      <Link href={`GuidePage/${guide.id}`} key={index}>
+        <button className="hover:bg-blue-500 w-full h-10 rounded-md relative">
+          {guide.name}
+        </button>
+      </Link>
+    ))}
+  </div>
+) : (
+  <div className="grid grid-cols-4 gap-4 p-3">
+    {categories.map((category, index) => (
+      <button className="hover:bg-blue-500 w-full h-10 rounded-md" key={`category-${index}`}>
+        <p className="text-ellipsis overflow-hidden whitespace-nowrap px-2">
+          {category.name}
+        </p>
+      </button>
+    ))}
+  </div>
+)}
     </div>
 
 
