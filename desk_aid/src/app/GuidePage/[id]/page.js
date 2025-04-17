@@ -33,12 +33,20 @@ const changeStep = (id) => {
 
 // Back button goes back a step if the parent step id is not null, otherwise goes back to the previous page
 const backButton = () => {
-    if(currStep.parentStepID !== null) {
-        changeStep(currStep.parentStepID);
+
+    // Gave me a headache so I'm doing it unethically with a try catch
+    try {
+        if(currStep !== null && currStep.parentStepID !== null) {
+            changeStep(currStep.parentStepID);
+        } 
+        else {
+            window.history.back();
+        }
     } 
-    else {
+    catch (error) {
         window.history.back();
     }
+    
 }
 
 return (
