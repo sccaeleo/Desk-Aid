@@ -1,7 +1,7 @@
 {
   "name": "desk_aid",
   "version": "0.1.0",
-  "type": "module",
+  "type": "commonjs",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -29,7 +29,8 @@
     "@eslint/eslintrc": "^3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.2.0",
+    "@testing-library/react": "^16.3.0",
+    "@types/jest": "^29.5.14",
     "babel-jest": "^29.7.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
