@@ -185,7 +185,7 @@ app.get("/api/guides", (req, res, next) => {
             res.status(400).json({"error":err.message});
             return;
         }
-        res.json(rows)
+        res.status(200).json(rows)
     });
 });
 
@@ -211,23 +211,23 @@ app.get('/api/guides', (req, res) => {
     if (searchQuery) {
       db.all(`SELECT * FROM guides WHERE name LIKE '${searchQuery}%'`, (err, rows) => {
         if (err) {
-          console.error(err);
-          res.status(500).send({ message: 'Error searching for guides' });
+            console.error(err);
+            res.status(500).send({ message: 'Error searching for guides' });
         } else {
-          res.send(rows);
+            res.status(200).send(rows);
         }
-      });
+    });
     } else {
       db.all('SELECT * FROM guides', (err, rows) => {
         if (err) {
-          console.error(err);
-          res.status(500).send({ message: 'Error fetching guides' });
+            console.error(err);
+            res.status(500).send({ message: 'Error fetching guides' });
         } else {
-          res.send(rows);
+            res.status(200).send(rows);
         }
-      });
+        });
     }
-  });
+});
 
 
 // Create guide
@@ -259,7 +259,7 @@ app.put("/api/guides/:id", (req, res, next) => {
             res.status(400).json({ error: err.message });
             return;
         }
-        res.json({ message: "Guide updated successfully" });
+        res.status(200).json({ message: "Guide updated successfully" });
     });
 });
 
@@ -273,7 +273,7 @@ app.delete("/api/guides/:id", (req, res, next) => {
                 res.status(400).json({"error": res.message})
                 return;
             }
-            res.json({"message":"deleted"})
+            res.status(200).json({"message":"deleted"})
     });
 });
 
@@ -288,7 +288,7 @@ app.get("/api/steps/:id", (req, res, next) => {
             res.status(400).json({"error":err.message});
             return;
         }
-        res.json(rows)
+        res.status(200).json(rows)
         console.log(rows)
     });
 })
@@ -314,7 +314,7 @@ app.post("/api/steps", (req, res, next) => {
                         res.status(400).json({ error: err.message });
                         return;
                     }
-                    res.json({ id: this.lastID, name: req.body.name, description: req.body.description, guideID: req.body.guideID, parentStepID: req.body.parentStepID });
+                    res.status(200).json({ id: this.lastID, name: req.body.name, description: req.body.description, guideID: req.body.guideID, parentStepID: req.body.parentStepID });
                 }
             );
         }
@@ -335,6 +335,7 @@ app.put("/api/steps/:id", (req, res, next) => {
             return;
         }
         console.log("Step updated: " + id);
+        res.status(200).json({ message: "Step updated successfully" });
     })
 })
 
@@ -376,7 +377,7 @@ app.get("/api/stepLinks/:id", (req, res, next) => {
             res.status(400).json({"error":err.message});
             return;
         }
-        res.json(rows)
+        res.status(200).json(rows)
         console.log(rows)
     })
     
@@ -417,14 +418,14 @@ app.post("/api/categories_tables", (req, res, next) => {
 app.delete('/api/categories_tables', (req, res) => {
     const guideID = req.query.guideID;
     db.run(`DELETE FROM categories_tables WHERE guideID = ${guideID}`, (err) => {
-      if (err) {
+    if (err) {
         console.error(err);
         res.status(500).send({ message: 'Error deleting record' });
-      } else {
-        res.send({ message: 'Record deleted successfully' });
-      }
+    } else {
+        res.status(200).send({ message: 'Record deleted successfully' });
+    }
     });
-  });
+});
 
 
 

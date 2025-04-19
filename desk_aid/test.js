@@ -105,6 +105,108 @@ describe('Server Tests', () => {
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('id');
   });
+
+  it('Gets guides', async () => {
+    const response = await request(server).get('/api/guides');
+    expect(response.status).toBe(200); 
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body[0]).toHaveProperty('id');
+    expect(response.body[1]).toHaveProperty('name');
+  })
+
+  it('Gets one guide' , async () => {
+    const id = 1;
+    const response = await request(server).get(`/api/guides/${id}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toHaveProperty('name');
+  })
+
+  it('Searches for a guide', async () => {
+    const response = await request(server).get('/api/guides?search=test');
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body[0]).toHaveProperty('id');
+    expect(response.body[1]).toHaveProperty('name');
+  })
+
+  it('Creates guide', async () => {
+    const response = await request(server).post('/api/guides').send({ name: 'Test guide' });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+  });
+
+  it('Updates guide', async () => {
+    const id = 1;
+    const response = await request(server).put(`/api/guides/${id}`).send({ name: 'Test guide' });
+    expect(response.status).toBe(200);
+  });
+
+  it('Deletes guide', async () => {
+    const id = 1;
+    const response = await request(server).delete(`/api/guides/${id}`);
+    expect(response.status).toBe(200);
+  });
+
+  it('Gets steps', async () => {
+    const response = await request(server).get(`/api/steps/${1}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body[0]).toHaveProperty('id');
+    expect(response.body[1]).toHaveProperty('name');
+    expect(response.body[2]).toHaveProperty('description');
+  })
+
+  it('Adds a step', async () => {
+    const response = await request(server).post('/api/steps').send({ name: 'Test step', description: 'Test desc', guideID: 1, parentStepID: 1 });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toHaveProperty('name');
+    expect(response.body).toHaveProperty('description');
+    expect(response.body).toHaveProperty('guideID');
+    expect(response.body).toHaveProperty('parentStepID');
+  }); 
+
+  it('Updates a step', async () => {
+    const id = 1;
+    const response = await request(server).put(`/api/steps/${id}`).send({ name: 'Test step', description: 'Test desc'});
+    expect(response.status).toBe(200);
+  });
+
+  it('Deletes a step', async () => {
+    const id = 1;
+    const response = await request(server).delete(`/api/steps/${id}`);
+    expect(response.status).toBe(200);
+  });
+
+  it('Gets step links', async () => {
+    const response = await request(server).get(`/api/stepLinks/${1}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body[0]).toHaveProperty('current_step_ID');
+    expect(response.body[1]).toHaveProperty('child_step_ID');
+    expect(response.body[2]).toHaveProperty('guideID');
+  })
+
+  it('Gets the categories guides links', async () => {
+    const response = await request(server).get(`/api/categories_tables/`);
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body[0]).toHaveProperty('categoryID');
+    expect(response.body[1]).toHaveProperty('guideID');
+  })
+
+  it('Adds a category guide link', async () => {
+    const response = await request(server).post('/api/categories_tables').send({ categoryID: 1, guideID: 1 });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+  });
+
+  it('Deletes a category guide link', async () => {
+    const id = 1;
+    const response = await request(server).delete(`/api/categories_tables/`).query({guideID: 1 });
+    expect(response.status).toBe(200);
+  });
 });
 
 // Home Page Tests
