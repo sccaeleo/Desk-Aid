@@ -20,7 +20,7 @@ app.use(expressSession(session));
 
 // Check server
 app.get("/", (req, res, next) => {
-    res.json({"message":"The server is up and running!"})
+    res.status(200).json({"message":"The server is up and running!"})
 });
 
 // Check if user is signed in

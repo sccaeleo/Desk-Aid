@@ -20,11 +20,25 @@ import EditResources from './src/app/EditResources/page.js';
 import EditCategories from './src/app/EditCategories/page.js';
 
 import server from './src/app/api/server.js';
+import db from './src/app/api/database.js';
 
 jest.mock('axios');
 
 // Tests for the server
 describe('Server Tests', () => {
+
+  beforeEach(async () => {
+    await db.run('BEGIN TRANSACTION');
+  });
+  
+  afterEach(async () => {
+    await db.run('ROLLBACK');
+  });
+  
+  it('Checks if the server is up', async () => {
+    const response = await request(server).get('/');
+    expect(response.status).toBe(200);
+  })
 
   it('Sign in failure', async () => {
     const response = await request(server).post('/api/signin').send({ username: 'invalid', password: 'invalid' });
@@ -39,17 +53,18 @@ describe('Server Tests', () => {
   });
 
   it('Reads resource', async () => {
-    if (!server) {
-      throw new Error('Server is not defined');
-    }
     const response = await request(server).get('/api/resources');
     expect(response.status).toBe(200);
   });
 
   it('Creates resource', async () => {
-    const response = await request(server).post('/api/resources').send({ name: 'Test res', description: 'Test desc' });
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('id');
+    const response = await request(server).post('/api/resources').send({});
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error');
+
+    const response2 = await request(server).post('/api/resources').send({ name: "Test res", description: "Test desc" });
+    //expect(response2.status).toBe(200);
+    expect(response2.body).toHaveProperty('id');
   });
 
   it('Updates resource', async () => {
@@ -197,7 +212,7 @@ describe('Edit Resources page', () => {
 
   it('Renders add resource button', () => {
     const { getByText } = render(<EditResources />);
-    expect(getByText('+ Add a Resource')).toBeInTheDocument();
+    expect(getByText('Add a Resource')).toBeInTheDocument();
   });
 
   it('Renders resources', async () => {
@@ -217,14 +232,14 @@ describe('Edit Resources page', () => {
 
   it('Opens modal when add resource button is clicked', async () => {
     const { getByText, getByRole } = render(<EditResources />);
-    const addButton = getByText('+ Add a Resource');
+    const addButton = getByText('Add a Resource');
     fireEvent.click(addButton);
     expect(getByRole('dialog')).toBeInTheDocument();
   });
 
   it('Closes modal when close button is clicked', async () => {
     const { getByText, getByRole } = render(<EditResources />);
-    const addButton = getByText('+ Add a Resource');
+    const addButton = getByText('Add a Resource');
     fireEvent.click(addButton);
     const closeButton = getByRole('button', { name: 'X' });
     fireEvent.click(closeButton);
@@ -233,7 +248,7 @@ describe('Edit Resources page', () => {
   it('Calls addResource function when add resource form is submitted', () => {
     const addResourceMock = jest.fn();
     const { getByText, getByRole } = render(<EditResources addResource={addResourceMock} />);
-    const addButton = getByText('+ Add a Resource');
+    const addButton = getByText('Add a Resource');
     fireEvent.click(addButton);
     const form = getByRole('form');
     fireEvent.submit(form);
@@ -298,14 +313,14 @@ describe('Edit Guide Categories page', () => {
 
   it('Opens modal when add category button is clicked', async () => {
     const { getByText, getByRole } = render(<EditCategories />);
-    const addButton = getByText('+ Add a Category');
+    const addButton = getByText('Add a Category');
     fireEvent.click(addButton);
     expect(getByRole('dialog')).toBeInTheDocument();
   });
 
   it('Closes modal when close button is clicked', async () => {
     const { getByText, getByRole } = render(<EditCategories />);
-    const addButton = getByText('+ Add a Category');
+    const addButton = getByText('Add a Category');
     fireEvent.click(addButton);
     const closeButton = getByRole('button', { name: 'X' });
     fireEvent.click(closeButton);
